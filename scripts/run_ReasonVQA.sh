@@ -255,49 +255,49 @@ case $1 in
     ;;
 # ======================================== Mantis-Idefics2
   41)
-    CONDA_ENV="mantis_idefics2"
+    CONDA_ENV="owl3"
     MODEL_NAME="mantis_idefics2"
     START=0
     MULTICHOICE=true
     ;;
   42)
-    CONDA_ENV="mantis_idefics2"
+    CONDA_ENV="owl3"
     MODEL_NAME="mantis_idefics2"
     START=20000
     MULTICHOICE=true
     ;;
   43)
-    CONDA_ENV="mantis_idefics2"
+    CONDA_ENV="owl3"
     MODEL_NAME="mantis_idefics2"
     START=40000
     MULTICHOICE=true
     ;;
   44)
-    CONDA_ENV="mantis_idefics2"
+    CONDA_ENV="owl3"
     MODEL_NAME="mantis_idefics2"
     START=60000
     MULTICHOICE=true
     ;;
   45)
-    CONDA_ENV="mantis_idefics2"
+    CONDA_ENV="owl3"
     MODEL_NAME="mantis_idefics2"
     START=0
     MULTICHOICE=false
     ;;
   46)
-    CONDA_ENV="mantis_idefics2"
+    CONDA_ENV="owl3"
     MODEL_NAME="mantis_idefics2"
     START=20000
     MULTICHOICE=false
     ;;
   47)
-    CONDA_ENV="mantis_idefics2"
+    CONDA_ENV="owl3"
     MODEL_NAME="mantis_idefics2"
     START=40000
     MULTICHOICE=false
     ;;
   48)
-    CONDA_ENV="mantis_idefics2"
+    CONDA_ENV="owl3"
     MODEL_NAME="mantis_idefics2"
     START=60000
     MULTICHOICE=false
