@@ -63,15 +63,15 @@ if __name__ == '__main__':
 
         model = LLaVA_NEXT_Stronger()
 
-    elif args.model_name == 'mantis_idefics2':
-        from models.MantisIdefics2 import MantisIdefics2
-
-        model = MantisIdefics2()
-
     elif args.model_name == 'mantis_siglip':
         from models.MantisSiglip import MantisSiglip
 
         model = MantisSiglip()
+
+    elif args.model_name == 'mantis_idefics2':
+        from models.MantisIdefics2 import MantisIdefics2
+
+        model = MantisIdefics2()
 
     assert model is not None, 'Invalid model name'
 

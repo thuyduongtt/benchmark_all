@@ -8,6 +8,7 @@ DS_DIR="../dataset/${DS_VERSION}"
 MODEL_TYPE=""
 
 case $1 in
+# ======================================== mPLUGOwl3
   1)
     CONDA_ENV="owl3"
     MODEL_NAME="mPLUGOwl3"
@@ -56,7 +57,7 @@ case $1 in
     START=60000
     MULTICHOICE=false
     ;;
-
+# ======================================== Idefics2
   9)
     CONDA_ENV="owl3"
     MODEL_NAME="idefics2"
@@ -105,7 +106,7 @@ case $1 in
     START=60000
     MULTICHOICE=false
     ;;
-
+# ======================================== LLaVA
   17)
     CONDA_ENV="llava"
     MODEL_NAME="llava"
@@ -154,52 +155,150 @@ case $1 in
     START=60000
     MULTICHOICE=false
     ;;
-
+# ======================================== LLaVA-NEXT
   25)
-    CONDA_ENV="llava-next"
+    CONDA_ENV="llava_next"
     MODEL_NAME="llava_next_stronger"
     START=0
     MULTICHOICE=true
     ;;
   26)
-    CONDA_ENV="llava-next"
+    CONDA_ENV="llava_next"
     MODEL_NAME="llava_next_stronger"
     START=20000
     MULTICHOICE=true
     ;;
   27)
-    CONDA_ENV="llava-next"
+    CONDA_ENV="llava_next"
     MODEL_NAME="llava_next_stronger"
     START=40000
     MULTICHOICE=true
     ;;
   28)
-    CONDA_ENV="llava-next"
+    CONDA_ENV="llava_next"
     MODEL_NAME="llava_next_stronger"
     START=60000
     MULTICHOICE=true
     ;;
   29)
-    CONDA_ENV="llava-next"
+    CONDA_ENV="llava_next"
     MODEL_NAME="llava_next_stronger"
     START=0
     MULTICHOICE=false
     ;;
   30)
-    CONDA_ENV="llava-next"
+    CONDA_ENV="llava_next"
     MODEL_NAME="llava_next_stronger"
     START=20000
     MULTICHOICE=false
     ;;
   31)
-    CONDA_ENV="llava-next"
+    CONDA_ENV="llava_next"
     MODEL_NAME="llava_next_stronger"
     START=40000
     MULTICHOICE=false
     ;;
   32)
-    CONDA_ENV="llava-next"
+    CONDA_ENV="llava_next"
     MODEL_NAME="llava_next_stronger"
+    START=60000
+    MULTICHOICE=false
+    ;;
+# ======================================== Mantis-SIGLIP
+  33)
+    CONDA_ENV="mantis_siglip"
+    MODEL_NAME="mantis_siglip"
+    START=0
+    MULTICHOICE=true
+    ;;
+  34)
+    CONDA_ENV="mantis_siglip"
+    MODEL_NAME="mantis_siglip"
+    START=20000
+    MULTICHOICE=true
+    ;;
+  35)
+    CONDA_ENV="mantis_siglip"
+    MODEL_NAME="mantis_siglip"
+    START=40000
+    MULTICHOICE=true
+    ;;
+  36)
+    CONDA_ENV="mantis_siglip"
+    MODEL_NAME="mantis_siglip"
+    START=60000
+    MULTICHOICE=true
+    ;;
+  37)
+    CONDA_ENV="mantis_siglip"
+    MODEL_NAME="mantis_siglip"
+    START=0
+    MULTICHOICE=false
+    ;;
+  38)
+    CONDA_ENV="mantis_siglip"
+    MODEL_NAME="mantis_siglip"
+    START=20000
+    MULTICHOICE=false
+    ;;
+  39)
+    CONDA_ENV="mantis_siglip"
+    MODEL_NAME="mantis_siglip"
+    START=40000
+    MULTICHOICE=false
+    ;;
+  40)
+    CONDA_ENV="mantis_siglip"
+    MODEL_NAME="mantis_siglip"
+    START=60000
+    MULTICHOICE=false
+    ;;
+# ======================================== Mantis-Idefics2
+  41)
+    CONDA_ENV="mantis_idefics2"
+    MODEL_NAME="mantis_idefics2"
+    START=0
+    MULTICHOICE=true
+    ;;
+  42)
+    CONDA_ENV="mantis_idefics2"
+    MODEL_NAME="mantis_idefics2"
+    START=20000
+    MULTICHOICE=true
+    ;;
+  43)
+    CONDA_ENV="mantis_idefics2"
+    MODEL_NAME="mantis_idefics2"
+    START=40000
+    MULTICHOICE=true
+    ;;
+  44)
+    CONDA_ENV="mantis_idefics2"
+    MODEL_NAME="mantis_idefics2"
+    START=60000
+    MULTICHOICE=true
+    ;;
+  45)
+    CONDA_ENV="mantis_idefics2"
+    MODEL_NAME="mantis_idefics2"
+    START=0
+    MULTICHOICE=false
+    ;;
+  46)
+    CONDA_ENV="mantis_idefics2"
+    MODEL_NAME="mantis_idefics2"
+    START=20000
+    MULTICHOICE=false
+    ;;
+  47)
+    CONDA_ENV="mantis_idefics2"
+    MODEL_NAME="mantis_idefics2"
+    START=40000
+    MULTICHOICE=false
+    ;;
+  48)
+    CONDA_ENV="mantis_idefics2"
+    MODEL_NAME="mantis_idefics2"
     START=60000
     MULTICHOICE=false
     ;;
