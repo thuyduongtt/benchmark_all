@@ -10,7 +10,7 @@ device_map = 'auto'
 class LLaVA(BenchmarkModel):
     def __init__(self):
         super().__init__()
-        self.MODEL_PATH = 'liuhaotian/llava-v1.5-7b'
+        self.MODEL_PATH = 'liuhaotian/llava-v1.5-13b'
         self.model = None
         self.tokenizer = None
         self.processor = None
@@ -26,7 +26,7 @@ class LLaVA(BenchmarkModel):
         self.processor = image_processor
 
     def run_vqa_task(self, image, row_data, choices=None):
-        if self.processor is None:
+        if self.model is None:
             self.load_model()
 
         list_of_choices = []
