@@ -5,6 +5,7 @@ DS_NAME="ReasonVQA"
 DS_VERSION="unbalanced"
 
 DS_DIR="../dataset/${DS_VERSION}"
+MODEL_TYPE=""
 
 case $1 in
   1)
