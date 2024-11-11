@@ -34,7 +34,6 @@ module load conda
 # cd ~/
  
 # Perform experiments
-#source activate owl3
 
 ./scripts/run_ReasonVQA.sh $LSB_JOBINDEX
 

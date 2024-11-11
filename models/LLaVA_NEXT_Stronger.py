@@ -25,7 +25,8 @@ class LLaVA_NEXT_Stronger(BenchmarkModel):
     def load_model(self):
         tokenizer, model, image_processor, max_length = load_pretrained_model(self.MODEL_PATH,
                                                                               None, self.MODEL_NAME,
-                                                                              device_map=device_map)
+                                                                              device_map=device_map,
+                                                                              attn_implementation=None)
         model.eval()
         model.tie_weights()
         self.model = model
@@ -33,8 +34,6 @@ class LLaVA_NEXT_Stronger(BenchmarkModel):
         self.processor = image_processor
 
     def run_vqa_task(self, image, row_data, choices=None):
-        # return f'prediction, {image}, {row_data["question"]}'  # turn off model for pipeline testing
-
         if self.processor is None:
             self.load_model()
 
