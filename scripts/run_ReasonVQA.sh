@@ -49,21 +49,23 @@ case $1 in
     ;;
 esac
 
+OUTPUT_NAME=${MODEL_NAME}_${MODEL_TYPE}_${DS_NAME}_${DS_VERSION}_${START}
+
 if [ "$MULTICHOICE" = true ] ; then
   python start.py \
-  --model_name $MODEL_NAME \
+   --model_name $MODEL_NAME \
    --ds_name $DS_NAME \
    --ds_dir $DS_DIR \
-   --output_dir_name output_mc_${DS_NAME}_${DS_VERSION}_${START} \
+   --output_dir_name output_mc_${OUTPUT_NAME} \
    --start_at $START \
    --limit $LIMIT \
    --multichoice
 else
   python start.py \
-  --model_name $MODEL_NAME \
-  --ds_name $DS_NAME \
+   --model_name $MODEL_NAME \
+   --ds_name $DS_NAME \
    --ds_dir $DS_DIR \
-   --output_dir_name output_${DS_NAME}_${DS_VERSION}_${START} \
+   --output_dir_name output_${OUTPUT_NAME} \
    --start_at $START \
    --limit $LIMIT
 fi
