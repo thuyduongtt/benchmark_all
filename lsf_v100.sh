@@ -34,7 +34,6 @@ module load conda
 # cd ~/
  
 # Perform experiments
-
 ./scripts/run_ReasonVQA.sh $LSB_JOBINDEX
 
 
