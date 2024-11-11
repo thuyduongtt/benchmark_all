@@ -1,7 +1,6 @@
 import torch
 from PIL import Image
-from mantis.models.mllava import MLlavaProcessor
-from mantis.models.mllava import chat_mllava
+from mantis.models.mllava import chat_mllava, MLlavaProcessor, LlavaForConditionalGeneration
 
 from models.BenchmarkModel import BenchmarkModel
 
@@ -18,7 +17,7 @@ class MantisSiglip(BenchmarkModel):
     def load_model(self):
         self.processor = MLlavaProcessor.from_pretrained(self.MODEL_PATH)
         attn_implementation = None  # or "flash_attention_2"
-        self.model = AutoModelForVision2Seq.from_pretrained(self.MODEL_PATH, device_map="cuda",
+        self.model = LlavaForConditionalGeneration.from_pretrained(self.MODEL_PATH, device_map='auto',
                                                             torch_dtype=torch.bfloat16,
                                                             attn_implementation=attn_implementation)
 
