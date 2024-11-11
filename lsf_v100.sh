@@ -4,7 +4,7 @@
 #BSUB -e %x.%j.err            # The same goes for the error file
  
 #BSUB -n 2                        # Specify the number of CPUS
-#BSUB -M 4000                     # Specify the RAM PER CPU in MB that your job will use.
+#BSUB -M 16000                     # Specify the RAM PER CPU in MB that your job will use.
 #BSUB -gpu "num=1"                # Specify the number of GPUs
 #BSUB -R "span[hosts=1]"          # run on a single host
 #BSUB -q batch_v100
@@ -34,7 +34,7 @@ module load conda
 # cd ~/
  
 # Perform experiments
-source activate owl3
+#source activate owl3
 
 ./scripts/run_ReasonVQA.sh $LSB_JOBINDEX
 
