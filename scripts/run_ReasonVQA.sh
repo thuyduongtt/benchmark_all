@@ -107,53 +107,103 @@ case $1 in
     ;;
 
   17)
-    CONDA_ENV="llava-next"
-    MODEL_NAME="llava_next_stronger"
+    CONDA_ENV="llava"
+    MODEL_NAME="llava"
     START=0
     MULTICHOICE=true
     ;;
   18)
+    CONDA_ENV="llava"
+    MODEL_NAME="llava"
+    START=20000
+    MULTICHOICE=true
+    ;;
+  19)
+    CONDA_ENV="llava"
+    MODEL_NAME="llava"
+    START=40000
+    MULTICHOICE=true
+    ;;
+  20)
+    CONDA_ENV="llava"
+    MODEL_NAME="llava"
+    START=60000
+    MULTICHOICE=true
+    ;;
+  21)
+    CONDA_ENV="llava"
+    MODEL_NAME="llava"
+    START=0
+    MULTICHOICE=false
+    ;;
+  22)
+    CONDA_ENV="llava"
+    MODEL_NAME="llava"
+    START=20000
+    MULTICHOICE=false
+    ;;
+  23)
+    CONDA_ENV="llava"
+    MODEL_NAME="llava"
+    START=40000
+    MULTICHOICE=false
+    ;;
+  24)
+    CONDA_ENV="llava"
+    MODEL_NAME="llava"
+    START=60000
+    MULTICHOICE=false
+    ;;
+
+  25)
+    CONDA_ENV="llava-next"
+    MODEL_NAME="llava_next_stronger"
+    START=0
+    MULTICHOICE=true
+    ;;
+  26)
     CONDA_ENV="llava-next"
     MODEL_NAME="llava_next_stronger"
     START=20000
     MULTICHOICE=true
     ;;
-  19)
+  27)
     CONDA_ENV="llava-next"
     MODEL_NAME="llava_next_stronger"
     START=40000
     MULTICHOICE=true
     ;;
-  20)
+  28)
     CONDA_ENV="llava-next"
     MODEL_NAME="llava_next_stronger"
     START=60000
     MULTICHOICE=true
     ;;
-  21)
+  29)
     CONDA_ENV="llava-next"
     MODEL_NAME="llava_next_stronger"
     START=0
     MULTICHOICE=false
     ;;
-  22)
+  30)
     CONDA_ENV="llava-next"
     MODEL_NAME="llava_next_stronger"
     START=20000
     MULTICHOICE=false
     ;;
-  23)
+  31)
     CONDA_ENV="llava-next"
     MODEL_NAME="llava_next_stronger"
     START=40000
     MULTICHOICE=false
     ;;
-  24)
+  32)
     CONDA_ENV="llava-next"
     MODEL_NAME="llava_next_stronger"
     START=60000
     MULTICHOICE=false
     ;;
+
 esac
 
 
