@@ -45,7 +45,7 @@ class MPLUGOWL3(BenchmarkModel):
         messages = [{"role": "user", "content": f"<|image|>\n{question}"},
                     {"role": "assistant", "content": ""}]
 
-        inputs = self.processor(messages, images=image, videos=None)
+        inputs = self.processor(messages, images=[image], videos=None)
 
         inputs.to(device)
         inputs.update({
