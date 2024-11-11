@@ -1,11 +1,11 @@
+import copy
+
 import torch
 from PIL import Image
+from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN
+from llava.conversation import conv_templates
+from llava.mm_utils import process_images, tokenizer_image_token
 from llava.model.builder import load_pretrained_model
-from llava.mm_utils import get_model_name_from_path, process_images, tokenizer_image_token
-from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN, \
-    IGNORE_INDEX
-from llava.conversation import conv_templates, SeparatorStyle
-import copy
 
 from models.BenchmarkModel import BenchmarkModel
 
@@ -25,7 +25,8 @@ class LLaVA_NEXT_Stronger(BenchmarkModel):
     def load_model(self):
         tokenizer, model, image_processor, max_length = load_pretrained_model(self.MODEL_PATH,
                                                                               None, self.MODEL_NAME,
-                                                                              device_map=device_map)
+                                                                              device_map=device_map,
+                                                                              attn_implementation=None)
         model.eval()
         model.tie_weights()
         self.model = model
