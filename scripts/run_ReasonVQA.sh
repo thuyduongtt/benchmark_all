@@ -48,6 +48,47 @@ case $1 in
     START=60000
     MULTICHOICE=false
     ;;
+
+  9)
+    MODEL_NAME="idefics2"
+    START=0
+    MULTICHOICE=true
+    ;;
+  10)
+    MODEL_NAME="idefics2"
+    START=20000
+    MULTICHOICE=true
+    ;;
+  11)
+    MODEL_NAME="idefics2"
+    START=40000
+    MULTICHOICE=true
+    ;;
+  12)
+    MODEL_NAME="idefics2"
+    START=60000
+    MULTICHOICE=true
+    ;;
+  13)
+    MODEL_NAME="idefics2"
+    START=0
+    MULTICHOICE=false
+    ;;
+  14)
+    MODEL_NAME="idefics2"
+    START=20000
+    MULTICHOICE=false
+    ;;
+  15)
+    MODEL_NAME="idefics2"
+    START=40000
+    MULTICHOICE=false
+    ;;
+  16)
+    MODEL_NAME="idefics2"
+    START=60000
+    MULTICHOICE=false
+    ;;
 esac
 
 OUTPUT_NAME=${MODEL_NAME}_${MODEL_TYPE}_${DS_NAME}_${DS_VERSION}_${START}
