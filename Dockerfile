@@ -6,10 +6,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Set up a virtual environment
 RUN conda create -n llava_next python=3.10
+RUN conda activate llava_next
 
 # Install PyTorch (with CUDA 12.1 support) and other required packages
-conda install pytorch torchvision pytorch-cuda=12.1 -c pytorch -c nvidia
-
+RUN conda install pytorch torchvision pytorch-cuda=12.1 -c pytorch -c nvidia
 RUN pip install flash-attn
 RUN pip install git+https://github.com/LLaVA-VL/LLaVA-NeXT.git
 RUN pip install ijson
