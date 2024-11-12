@@ -6,13 +6,11 @@ FROM ubuntu
 # Set up environment variables to avoid interactive prompts during package installations
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN mkdir -p ~/miniconda3
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
-RUN bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-RUN rm -rf ~/miniconda3/miniconda.sh
+# Install system dependencies
+RUN apt-get install libxml2 libgl1 libglib2.0-0
+RUN apt-get install gcc
+RUN apt-get install wget
 
-RUN conda create -n llava_next python=3.10
-RUN conda activate llava_next
 
 # Install PyTorch (with CUDA 12.1 support) and other required packages
 RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
