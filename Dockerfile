@@ -1,16 +1,28 @@
 # Use the official NVIDIA CUDA 12.1 base image with Ubuntu as a base
-FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
+FROM ubuntu
+# FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu20.04
+# FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
 
 # Set up environment variables to avoid interactive prompts during package installations
 ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    python3-venv \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up a virtual environment (optional but recommended for Python isolation)
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 # Upgrade pip to the latest version
 RUN pip install --upgrade pip
 
 # Install PyTorch (with CUDA 12.1 support) and other required packages
-# RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-
-RUN apt-get install git-all
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
 RUN pip install flash-attn
 RUN pip install git+https://github.com/LLaVA-VL/LLaVA-NeXT.git
