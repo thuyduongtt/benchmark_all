@@ -1,5 +1,5 @@
 # Use the official NVIDIA CUDA 12.1 base image with Ubuntu as a base
-FROM ubuntu
+FROM ubuntu:24.04
 # FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu20.04
 # FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
 
@@ -7,9 +7,12 @@ FROM ubuntu
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system dependencies
-RUN apt-get install libxml2 libgl1 libglib2.0-0
-RUN apt-get install gcc
-RUN apt-get install wget
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    python3-venv \
+    && rm -rf /var/lib/apt/lists/*
 
 
 # Install PyTorch (with CUDA 12.1 support) and other required packages
