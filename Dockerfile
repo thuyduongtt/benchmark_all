@@ -8,7 +8,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN pip install --upgrade pip
 
 # Install PyTorch (with CUDA 12.1 support) and other required packages
-RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+# RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+RUN pt-get install git
 
 RUN pip install flash-attn
 RUN pip install git+https://github.com/LLaVA-VL/LLaVA-NeXT.git
