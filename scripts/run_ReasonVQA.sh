@@ -311,7 +311,7 @@ source activate $CONDA_ENV
 OUTPUT_NAME=${MODEL_NAME}_${MODEL_TYPE}_${DS_NAME}_${DS_VERSION}_${START}
 
 if [ "$MULTICHOICE" = true ] ; then
-  python start.py \
+  python -m benchmark.start \
    --model_name $MODEL_NAME \
    --ds_name $DS_NAME \
    --ds_dir $DS_DIR \
@@ -320,7 +320,7 @@ if [ "$MULTICHOICE" = true ] ; then
    --limit $LIMIT \
    --multichoice
 else
-  python start.py \
+  python -m benchmark.start \
    --model_name $MODEL_NAME \
    --ds_name $DS_NAME \
    --ds_dir $DS_DIR \
