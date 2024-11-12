@@ -1,6 +1,6 @@
 import argparse
 
-from pipeline import run_pipeline_by_question
+from benchmark.pipeline import run_pipeline_by_question
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

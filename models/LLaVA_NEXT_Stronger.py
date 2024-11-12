@@ -8,9 +8,7 @@ from llava.mm_utils import process_images, tokenizer_image_token
 from llava.model.builder import load_pretrained_model
 
 from models.BenchmarkModel import BenchmarkModel
-
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-device_map = 'auto'
+from models.LLaVA import device_map
 
 
 class LLaVA_NEXT_Stronger(BenchmarkModel):
@@ -23,9 +21,8 @@ class LLaVA_NEXT_Stronger(BenchmarkModel):
         self.processor = None
 
     def load_model(self):
-        tokenizer, model, image_processor, max_length = load_pretrained_model(self.MODEL_PATH,
-                                                                              None, self.MODEL_NAME,
-                                                                              device_map=device_map)
+        tokenizer, model, image_processor, max_length = load_pretrained_model(self.MODEL_PATH, None, self.MODEL_NAME,
+                                                                              device_map='auto')
         model.eval()
         model.tie_weights()
         self.model = model
@@ -33,8 +30,10 @@ class LLaVA_NEXT_Stronger(BenchmarkModel):
         self.processor = image_processor
 
     def run_vqa_task(self, image, row_data, choices=None):
-        if self.processor is None:
+        if self.model is None:
             self.load_model()
+
+        device = self.model.device
 
         image = Image.open(image).convert('RGB')
 
@@ -56,7 +55,8 @@ class LLaVA_NEXT_Stronger(BenchmarkModel):
         conv.append_message(conv.roles[1], None)
         prompt_question = conv.get_prompt()
 
-        input_ids = tokenizer_image_token(prompt_question, self.tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(
+        input_ids = tokenizer_image_token(prompt_question, self.tokenizer, IMAGE_TOKEN_INDEX,
+                                          return_tensors="pt").unsqueeze(
             0).to(device)
         image_sizes = [image.size]
 

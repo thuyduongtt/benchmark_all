@@ -329,25 +329,25 @@ def compute_score_llava_vqa(question_jsonl, answer_jsonl):
 
 
 if __name__ == '__main__':
-    compute_score_llava_reasonvqa('E:/Code/Masters/ds/ReasonVQA_subset/unbalanced',
-                                  'results/result_llava/cleaned_unbalanced.jsonl',
-                                  'results/result_llava/answers/cleaned_merge_unbalanced.jsonl')
-    compute_score_llava_reasonvqa('E:/Code/Masters/ds/ReasonVQA_subset/balanced_10',
-                                  'results/result_llava/cleaned_balanced_10.jsonl',
-                                  'results/result_llava/answers/cleaned_merge_balanced_10.jsonl')
+    # compute_score_llava_reasonvqa('E:/Code/Masters/ds/ReasonVQA_subset/unbalanced',
+    #                               'results/result_llava/cleaned_unbalanced.jsonl',
+    #                               'results/result_llava/answers/cleaned_merge_unbalanced.jsonl')
+    # compute_score_llava_reasonvqa('E:/Code/Masters/ds/ReasonVQA_subset/balanced_10',
+    #                               'results/result_llava/cleaned_balanced_10.jsonl',
+    #                               'results/result_llava/answers/cleaned_merge_balanced_10.jsonl')
     # compute_score_llava_vqa('results/result_llava/VQAv2.jsonl', 'results/result_llava/answers/merge_VQAv2.jsonl')
 
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('--model', type=str, default='mPLUGOwl2')
-    # parser.add_argument('--ds', type=str, default='balanced_10')
-    # parser.add_argument('--multichoice', action='store_true')
-    # args = parser.parse_args()
-    #
-    # # forced parameters
-    # args.model = 'mPLUGOwl2'
-    # args.ds = 'VQAv2'
-    # args.multichoice = False
-    #
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model', type=str, default='mPLUGOwl2')
+    parser.add_argument('--ds', type=str, default='balanced_10')
+    parser.add_argument('--multichoice', action='store_true')
+    args = parser.parse_args()
+
+    # forced parameters
+    args.model = 'mPLUGOwl2'
+    args.ds = 'VQAv2'
+    args.multichoice = False
+
     # score_dir = []
     # for d in Path(f'results/result_{args.model}/').iterdir():
     #     if d.is_dir() and d.name.startswith('output_') and (

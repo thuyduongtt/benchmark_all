@@ -178,8 +178,7 @@ def compute_score(list_of_result_dir, output_dir, limit=0):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, required=True)
-    parser.add_argument('--ds', type=str, required=True)
+    parser.add_argument('--result_dir', type=str, required=True)
     args = parser.parse_args()
 
     result_dir = []
