@@ -1,7 +1,8 @@
 # Use the official NVIDIA CUDA 12.1 base image with Ubuntu as a base
-FROM ubuntu:24.04
+# FROM ubuntu:24.04
 # FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu20.04
 # FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
+FROM nvcr.io/nvidia/pytorch:24.10-py3-igpu
 
 # Set up environment variables to avoid interactive prompts during package installations
 ENV DEBIAN_FRONTEND=noninteractive
