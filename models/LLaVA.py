@@ -16,6 +16,7 @@ class LLaVA(BenchmarkModel):
         self.processor = None
 
     def load_model(self):
+        print('Load model:', self.MODEL_PATH)
         tokenizer, model, image_processor, context_len = load_pretrained_model(
             model_path=self.MODEL_PATH,
             model_base=None,
