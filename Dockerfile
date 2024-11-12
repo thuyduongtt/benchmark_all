@@ -7,12 +7,9 @@ FROM ubuntu
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    python3-venv \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update &&
+RUN apt-get install -y --no-install-recommends python3 python3-pip python3-venv
+RUN rm -rf /var/lib/apt/lists/*
 
 # Set up a virtual environment (optional but recommended for Python isolation)
 RUN python3 -m venv /opt/venv
