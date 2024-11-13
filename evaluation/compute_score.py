@@ -51,7 +51,6 @@ def check_substring_exception(s1, s2):
 
 # https://huggingface.co/tasks/sentence-similarity
 def similarity_score(pred, gt):
-    return 0.0
     global similarity_model
     if similarity_model is None:
         similarity_model = SentenceTransformer('all-MiniLM-L6-v2', device=device)
