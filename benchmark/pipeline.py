@@ -169,6 +169,7 @@ def stream_data_vqa(ds_dir, limit=0, start_at=0, okvqa=False):
             choice_scores = [1] * len(answers) + [0] * (len(choices) - len(answers))
 
             yield {
+                'question_id': record['question_id'],
                 'image_id': record['image_id'],
                 'question': questions[record['question_id']],
                 'answers': answers,

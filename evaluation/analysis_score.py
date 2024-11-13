@@ -2,8 +2,6 @@ import ast
 import csv
 from pathlib import Path
 
-import jsonlines
-
 from CONSTS import *
 from Score import Score
 from utils import get_ratio, stream_data
@@ -220,112 +218,6 @@ def check_multichoice_answer(answer, prediction):
 def check_pred(pred, ans_list):
     answers_lower = [ans.lower() for ans in ans_list]
     return pred.lower() in answers_lower
-
-
-def compute_score_llava_reasonvqa(reasonvqa_dir, question_jsonl, answer_jsonl):
-    gt_answers = {}
-
-    with jsonlines.open(question_jsonl) as reader:
-        for obj in reader:
-            gt_answers[obj['question_id']] = obj['answers']
-
-    question_data = {}
-    for split in ['train', 'test']:
-        json_data = stream_data(f'{reasonvqa_dir}/{split}_cleaned.json')
-        for d in json_data:
-            question_data[d['question_id']] = {
-                **d,
-                'shuffled_answer': gt_answers[d['question_id']]
-                # answers in the form of (A, B, C, ...) after shuffling choices
-            }
-
-    total = 0
-    correct = 0
-
-    total_by_hop = {}
-    score_by_hop = {}
-
-    total_by_scene_graph = {
-        'with': 0,
-        'without': 0
-    }
-    score_by_scene_graph = {
-        'with': 0,
-        'without': 0
-    }
-
-    total_by_ds = {
-        'VG': 0,
-        'GLDv2': 0
-    }
-    score_by_ds = {
-        'VG': 0,
-        'GLDv2': 0
-    }
-
-    with jsonlines.open(answer_jsonl) as reader:
-        for obj in reader:
-            qid = obj['question_id']
-            ans = obj['text']
-
-            row = question_data[qid]
-            is_correct = ans in row['shuffled_answer']
-
-            total += 1
-
-            n_hop = row['n_hop']
-            if n_hop not in total_by_hop:
-                total_by_hop[n_hop] = 0
-                score_by_hop[n_hop] = 0
-            total_by_hop[n_hop] += 1
-
-            if row['has_scene_graph']:
-                total_by_scene_graph['with'] += 1
-            else:
-                total_by_scene_graph['without'] += 1
-
-            ds_name = 'VG' if row['image_id'].startswith('VG_') else 'GLDv2'
-            total_by_ds[ds_name] += 1
-
-            if is_correct:
-                correct += 1
-                score_by_hop[n_hop] += 1
-                score_by_scene_graph['with' if row['has_scene_graph'] else 'without'] += 1
-                score_by_ds[ds_name] += 1
-
-    print('Total:', total, 'Acc:', f'{get_ratio(correct, total):.4f}')
-    for h in range(1, MAX_HOP + 1):
-        print(f'{h}-hop:', f"{get_ratio(score_by_hop[h], total_by_hop[h]):.4f}")
-    print('W/ Scene graph:', f"{get_ratio(score_by_scene_graph['with'], total_by_scene_graph['with']):.4f}")
-    print('W/O Scene graph:',
-          f"{get_ratio(score_by_scene_graph['without'], total_by_scene_graph['without']):.4f}")
-    for ds in total_by_ds.keys():
-        print(ds, f"{get_ratio(score_by_ds[ds], total_by_ds[ds]):.4f}")
-
-
-def compute_score_llava_vqa(question_jsonl, answer_jsonl):
-    gt_answers = {}
-
-    with jsonlines.open(question_jsonl) as reader:
-        for obj in reader:
-            gt_answers[obj['question_id']] = obj['answers']
-
-    total = 0
-    correct = 0
-
-    with jsonlines.open(answer_jsonl) as reader:
-        for obj in reader:
-            qid = obj['question_id']
-            ans = obj['text']
-
-            total += 1
-
-            # print(gt_answers[qid], 'Prediction:', ans)
-
-            if ans in gt_answers[qid]:
-                correct += 1
-
-    print('Total:', total, 'Acc:', f'{get_ratio(correct, total):.4f}')
 
 
 if __name__ == '__main__':
