@@ -7,7 +7,7 @@ import spacy
 import torch
 from sentence_transformers import SentenceTransformer, util
 
-from CONSTS import *
+from evaluation.CONSTS import *
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -176,6 +176,8 @@ if __name__ == '__main__':
 
     all_csv_files = []
     get_all_csv(args.result_dir, all_csv_files)
+
+    print(f'There are {len(all_csv_files)} files in {args.result_dir}')
 
     compute_score(all_csv_files, f'{args.result_dir}/score')
 
