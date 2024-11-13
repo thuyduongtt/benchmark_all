@@ -1,13 +1,14 @@
 import ast
-import csv
-from pathlib import Path
+
+import pandas as pd
 
 from CONSTS import *
 from Score import Score
-from utils import get_ratio, stream_data
+from evaluation.utils import get_all_csv
+from utils import get_ratio
 
 
-def anaylysis_score_reasonvqa(result_dir, limit=0, multichoice=False):
+def anaylysis_score_reasonvqa(csv_files, limit=0, multichoice=False):
     total = 0
     score = Score()
 
@@ -34,18 +35,15 @@ def anaylysis_score_reasonvqa(result_dir, limit=0, multichoice=False):
 
     count = 0
     n_error = 0
-    for csvfile in Path(result_dir).iterdir():
-        if csvfile.is_dir():
-            continue
+    for csv_file in csv_files:
         if 0 < limit <= count:
             break
-        csv_file = f'{csvfile.parent}/{csvfile.name}'
-        f = open(csv_file, encoding="utf8")
 
         count += 1
 
-        reader = csv.DictReader(f)
-        for row in reader:
+        data = pd.read_csv(csv_file['path'])
+
+        for index, row in data.iterrows():
             # there's a bug that the answer set is empty, ignore them
             answer_str = row['answer'].lower()
             answer = ast.literal_eval(answer_str)
@@ -60,14 +58,14 @@ def anaylysis_score_reasonvqa(result_dir, limit=0, multichoice=False):
                 score_by_hop[n_hop] = Score()
             total_by_hop[n_hop] += 1
 
-            has_scene_graph = ast.literal_eval(row['has_scene_graph'])
+            has_scene_graph = row['has_scene_graph']
 
             if has_scene_graph:
                 total_by_scene_graph['with'] += 1
             else:
                 total_by_scene_graph['without'] += 1
 
-            ds_name = 'VG' if row['id'].startswith('VG_') else 'GLDv2'
+            ds_name = 'VG' if row['image_id'].startswith('VG_') else 'GLDv2'
             total_by_ds[ds_name] += 1
 
             # in case of multiple choice evaluation, we don't have any score
@@ -107,22 +105,20 @@ def anaylysis_score_reasonvqa(result_dir, limit=0, multichoice=False):
             else:
                 for s in METRICS:
                     try:
-                        val = ast.literal_eval(row[s])
+                        val = row[s]
                     except ValueError:
-                        print('ValueError:', csv_file, row['id'], row['question'])
+                        print('ValueError:', csv_file, row['image_id'], row['question'])
                     score[s] += val
                     score_by_hop[n_hop][s] += val
                     score_by_scene_graph['with' if has_scene_graph else 'without'][s] += val
                     score_by_ds[ds_name][s] += val
-
-        f.close()
 
     print('Total:', total, '| Score:', score)
     for s in METRICS:
         print('=====', s)
         print('Acc:', f'{get_ratio(score[s], total):.4f}')
         for h in range(1, MAX_HOP + 1):
-            print(f'{h}-hop:', f"{get_ratio(score_by_hop[f'{h}'][s], total_by_hop[f'{h}']):.4f}")
+            print(f'{h}-hop:', f"{get_ratio(score_by_hop[h][s], total_by_hop[h]):.4f}")
         print('W/ Scene graph:', f"{get_ratio(score_by_scene_graph['with'][s], total_by_scene_graph['with']):.4f}")
         print('W/O Scene graph:',
               f"{get_ratio(score_by_scene_graph['without'][s], total_by_scene_graph['without']):.4f}")
@@ -132,24 +128,21 @@ def anaylysis_score_reasonvqa(result_dir, limit=0, multichoice=False):
     print('Num of errors:', n_error)
 
 
-def anaylysis_score_vqa(result_dir, limit=0, multichoice=False):
+def anaylysis_score_vqa(csv_files, limit=0, multichoice=False):
     total = 0
     score = Score()
 
     count = 0
     n_error = 0
-    for csvfile in Path(result_dir).iterdir():
-        if csvfile.is_dir():
-            continue
+    for csv_file in csv_files:
         if 0 < limit <= count:
             break
-        csv_file = f'{csvfile.parent}/{csvfile.name}'
-        f = open(csv_file, encoding="utf8")
 
         count += 1
 
-        reader = csv.DictReader(f)
-        for row in reader:
+        data = pd.read_csv(csv_file['path'])
+
+        for index, row in data.iterrows():
             # there's a bug that the answer set is empty, ignore them
             answer_str = row['answer'].lower()
             answer = ast.literal_eval(answer_str)
@@ -174,8 +167,6 @@ def anaylysis_score_vqa(result_dir, limit=0, multichoice=False):
                     except ValueError:
                         print('ValueError:', csv_file, row['id'], row['question'])
                     score[s] += val
-
-        f.close()
 
     print('Total:', total, '| Score:', score)
     for s in METRICS:
@@ -221,36 +212,34 @@ def check_pred(pred, ans_list):
 
 
 if __name__ == '__main__':
-    # compute_score_llava_reasonvqa('E:/Code/Masters/ds/ReasonVQA_subset/unbalanced',
-    #                               'results/result_llava/cleaned_unbalanced.jsonl',
-    #                               'results/result_llava/answers/cleaned_merge_unbalanced.jsonl')
-    # compute_score_llava_reasonvqa('E:/Code/Masters/ds/ReasonVQA_subset/balanced_10',
-    #                               'results/result_llava/cleaned_balanced_10.jsonl',
-    #                               'results/result_llava/answers/cleaned_merge_balanced_10.jsonl')
-    # compute_score_llava_vqa('results/result_llava/VQAv2.jsonl', 'results/result_llava/answers/merge_VQAv2.jsonl')
+    RESULT_ROOT = '/mnt/WORK/Code/Masters/VQAModels/benchmark_all/results/'
+    dirs = [
+        {'name': 'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        {'name': 'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        {'name': 'output_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        {'name': 'output_mantis_siglip__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        {'name': 'output_mPLUGOwl2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, default='mPLUGOwl2')
-    parser.add_argument('--ds', type=str, default='balanced_10')
-    parser.add_argument('--multichoice', action='store_true')
-    args = parser.parse_args()
+        {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        {'name': 'output_mc_idefics2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        {'name': 'output_mc_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        {'name': 'output_mc_mantis_siglip__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        {'name': 'output_mc_mPLUGOwl2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+    ]
 
-    # forced parameters
-    args.model = 'mPLUGOwl2'
-    args.ds = 'VQAv2'
-    args.multichoice = False
+    for d in dirs:
+        print('=' * 50, d)
+        score_dir = f'{RESULT_ROOT}/{d["name"]}/score'
 
-    # score_dir = []
-    # for d in Path(f'results/result_{args.model}/').iterdir():
-    #     if d.is_dir() and d.name.startswith('output_') and (
-    #             (not args.multichoice and d.name.endswith(f'{args.ds}_score')) or (
-    #             args.multichoice and d.name.endswith(f'{args.ds}'))):
-    #         score_dir = f'results/result_{args.model}/{d.name}'
-    #
-    # print('Found directory for score analysis:')
-    # print(score_dir)
-    #
-    # print(args)
-    #
-    # if len(score_dir) > 0:
-    #     anaylysis_score_vqa(score_dir, multichoice=args.multichoice)
+        all_csv_files = []
+        get_all_csv(score_dir, all_csv_files)
+
+        print(f'There are {len(all_csv_files)} files in {score_dir}')
+
+        if d['reasonvqa']:
+            anaylysis_score_reasonvqa(all_csv_files, d['multichoice'])
+        else:
+            anaylysis_score_vqa(all_csv_files, d['multichoice'])

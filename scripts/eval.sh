@@ -20,6 +20,9 @@ case $1 in
   6)
     RESULT_DIR="output_mantis_idefics2__ReasonVQA_unbalanced"
     ;;
+  7)
+    RESULT_DIR="output_idefics2__ReasonVQA_unbalanced"
+    ;;
 esac
 
 

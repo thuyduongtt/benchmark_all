@@ -8,6 +8,7 @@ import torch
 from sentence_transformers import SentenceTransformer, util
 
 from evaluation.CONSTS import *
+from evaluation.utils import get_all_csv
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -153,23 +154,6 @@ def compute_score(list_of_csv, output_dir, limit=0):
         output_df.to_csv(f'{output_dir}/{csv_file["file_name"]}', index=False)
 
 
-def get_all_csv(path_to_dir, all_csv=None):
-    if all_csv is None:
-        all_csv = []
-    for f in Path(path_to_dir).iterdir():
-        if f.name.startswith('.'):
-            continue
-        if f.is_dir():
-            if f.name == 'score':
-                continue
-            get_all_csv(f, all_csv)
-        elif f.suffix == '.csv':
-            all_csv.append({
-                'file_name': f.name,
-                'path': str(f)
-            })
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--result_dir', type=str, required=True)
@@ -178,12 +162,4 @@ if __name__ == '__main__':
     all_csv_files = []
     get_all_csv(args.result_dir, all_csv_files)
 
-    print(f'There are {len(all_csv_files)} files in {args.result_dir}')
-
     compute_score(all_csv_files, f'{args.result_dir}/score')
-
-    # compute_score_multichoice(f'../export_{args.ds}', f'result_llava/{args.ds}.jsonl',
-    #                           f'result_llava/answers/merge_{args.ds}.jsonl')
-
-    # ans = extract_answer('<image> Question: Where is the video game on the ground from? Short answer: [answer] The video game is on the ground from the swimming pool.<|endofchunk|>')
-    # print(ans)
