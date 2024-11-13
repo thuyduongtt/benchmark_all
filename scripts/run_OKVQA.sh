@@ -15,11 +15,11 @@ case $1 in
     CONDA_ENV="owl3"
     MODEL_NAME="idefics2"
     ;;
-  2)
+  3)
     CONDA_ENV="mantis_siglip"
     MODEL_NAME="mantis_siglip"
     ;;
-  2)
+  4)
     CONDA_ENV="owl3"
     MODEL_NAME="mantis_idefics2"
     ;;
