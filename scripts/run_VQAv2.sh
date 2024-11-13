@@ -175,7 +175,7 @@ esac
 
 source activate $CONDA_ENV
 
-OUTPUT_NAME=${MODEL_NAME}_${MODEL_TYPE}_${DS_NAME}_${DS_VERSION}_${START}
+OUTPUT_NAME=${MODEL_NAME}_${MODEL_TYPE}_${DS_NAME}_${START}
 
 if [ "$MULTICHOICE" = true ] ; then
   python -m benchmark.start \
