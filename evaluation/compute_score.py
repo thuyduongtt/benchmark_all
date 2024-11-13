@@ -76,6 +76,8 @@ def vqa_acc(pred, gt):
 def extract_answer(answer_text):
     if answer_text.lower().startswith('answer:'):
         return answer_text[7:].strip()
+    if answer_text.lower().startswith('Answer:'):
+        return answer_text[7:].strip()
     return answer_text.strip()
 
 
@@ -172,6 +174,7 @@ def get_all_csv(path_to_dir, all_csv=None):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--result_dir', type=str, required=True)
+    parser.add_argument('--multichoice', action='store_true')
     args = parser.parse_args()
 
     all_csv_files = []
