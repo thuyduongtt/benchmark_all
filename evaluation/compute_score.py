@@ -132,7 +132,7 @@ def compute_score(list_of_csv, output_dir, limit=0):
             if len(answer) == 0:
                 continue
 
-            prediction_str = row['prediction'].lower()
+            prediction_str = str(row['prediction']).lower()
             if prediction_str.startswith('['):
                 prediction_str = ast.literal_eval(prediction_str)[0]
             prediction = extract_answer(prediction_str)
