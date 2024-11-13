@@ -17,6 +17,9 @@ case $1 in
   5)
     RESULT_DIR="output_mPLUGOwl3__ReasonVQA_unbalanced"
     ;;
+  5)
+    RESULT_DIR="output_mantis_idefics2__ReasonVQA_unbalanced"
+    ;;
 esac
 
 
