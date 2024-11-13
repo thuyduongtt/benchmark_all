@@ -1,24 +1,13 @@
 import argparse
 import ast
-import csv
 from pathlib import Path
 
+import pandas as pd
 import spacy
 import torch
 from sentence_transformers import SentenceTransformer, util
 
-from Score import Score
-
-ANSWER_COL_INDEX = 3
-PREDICTION_COL_INDEX = 4
-MAX_HOP = 3
-
-METRICS = ['exact_match', 'substring', 'similarity']
-
-# even one is another's substring, they don't have the same meaning
-SUBSTRING_EXCEPTIONS = [
-    'male___female'
-]
+from CONSTS import *
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -62,6 +51,7 @@ def check_substring_exception(s1, s2):
 
 # https://huggingface.co/tasks/sentence-similarity
 def similarity_score(pred, gt):
+    return 0.0
     global similarity_model
     if similarity_model is None:
         similarity_model = SentenceTransformer('all-MiniLM-L6-v2', device=device)
@@ -110,70 +100,73 @@ has_scene_graph
 '''
 
 
-def compute_score(list_of_result_dir, output_dir, limit=0):
+def compute_score(list_of_csv, output_dir, limit=0):
     if not Path(output_dir).exists():
         Path(output_dir).mkdir(parents=True)
 
     count = 0
-    for folder in list_of_result_dir:
+    for csv_file in list_of_csv:
         if 0 < limit <= count:
             break
-        for csvfile in Path(folder).iterdir():
-            if csvfile.name.startswith('.'):
+
+        count += 1
+        if count % 100 == 0:
+            print(count)
+
+        input_df = pd.read_csv(csv_file['path'])
+        if input_df.shape[0] == 0:
+            print('No data from', csv_file['path'])
+            continue
+
+        scores = {
+            'exact_match': [],
+            'substring': [],
+            'similarity': [],
+        }
+
+        for index, row in input_df.iterrows():
+            # there's a bug that the answer set is empty, ignore them
+            answer_str = row['answer'].lower()
+            answer = ast.literal_eval(answer_str)
+            if len(answer) == 0:
                 continue
 
-            if 0 < limit <= count:
-                break
-            csv_file = f'{csvfile.parent}/{csvfile.name}'
-            f = open(csv_file)
+            prediction_str = row['prediction'].lower()
+            if prediction_str.startswith('['):
+                prediction_str = ast.literal_eval(prediction_str)[0]
+            prediction = extract_answer(prediction_str)
 
-            count += 1
-            if count % 100 == 0:
-                print(count)
+            # compute all scores
+            if 'exact_match' in METRICS:
+                scores['exact_match'].append(exact_match_score(prediction, answer))
+            if 'substring' in METRICS:
+                scores['substring'].append(substring_score(prediction, answer))
+            if 'similarity' in METRICS:
+                scores['similarity'].append(similarity_score(prediction, answer))
 
-            csv_reader = csv.reader(f)
+        output_df = input_df
+        output_df['exact_match'] = scores['exact_match']
+        output_df['substring'] = scores['substring']
+        output_df['similarity'] = scores['similarity']
 
-            try:
-                score_file = open(f'{output_dir}/{csvfile.name}', 'w', encoding='utf-8')
-            except:
-                print('Error creating CSV file:', f'{output_dir}/{csvfile.name}')
+        output_df.to_csv(f'{output_dir}/{csv_file["file_name"]}', index=False)
+
+
+def get_all_csv(path_to_dir, all_csv=None):
+    if all_csv is None:
+        all_csv = []
+    for f in Path(path_to_dir).iterdir():
+        if f.name.startswith('.'):
+            continue
+        if f.is_dir():
+            if f.name == 'score':
                 continue
-
-            csv_writer = csv.writer(score_file)
-
-            try:
-                row = next(csv_reader)
-            except:
-                print('Error reading header row:', csvfile)
-                continue
-
-            csv_writer.writerow([*row, *METRICS])
-
-            for row in csv_reader:
-                # there's a bug that the answer set is empty, ignore them
-                answer_str = row[ANSWER_COL_INDEX].lower()  # 3: answer, 4: prediction
-                answer = ast.literal_eval(answer_str)
-                if len(answer) == 0:
-                    continue
-
-                prediction_str = row[PREDICTION_COL_INDEX].lower()  # 3: answer, 4: prediction
-                if prediction_str.startswith('['):
-                    prediction_str = ast.literal_eval(prediction_str)[0]
-                prediction = extract_answer(prediction_str)
-
-                # compute all scores
-                current_score = Score()
-                if 'exact_match' in METRICS:
-                    current_score.exact_match = exact_match_score(prediction, answer)
-                if 'substring' in METRICS:
-                    current_score.substring = substring_score(prediction, answer)
-                if 'similarity' in METRICS:
-                    current_score.similarity = similarity_score(prediction, answer)
-
-                csv_writer.writerow([*row, *current_score.to_list()])
-
-            score_file.close()
-            f.close()
+            get_all_csv(f, all_csv)
+        elif f.suffix == '.csv':
+            all_csv.append({
+                'file_name': f.name,
+                'path': str(f)
+            })
 
 
 if __name__ == '__main__':
@@ -181,16 +174,10 @@ if __name__ == '__main__':
     parser.add_argument('--result_dir', type=str, required=True)
     args = parser.parse_args()
 
-    result_dir = []
-    for d in Path(f'results/result_{args.model}/').iterdir():
-        if d.is_dir() and d.name.startswith('output_') and (
-                d.name.endswith(args.ds) or d.name.endswith(f'{args.ds}_test')):
-            result_dir.append(f'results/result_{args.model}/{d.name}')
+    all_csv_files = []
+    get_all_csv(args.result_dir, all_csv_files)
 
-    print('Found these directories for score computing:')
-    print(result_dir)
-
-    compute_score(result_dir, f'results/result_{args.model}/output_{args.ds}_score')
+    compute_score(all_csv_files, f'{args.result_dir}/score')
 
     # compute_score_multichoice(f'../export_{args.ds}', f'result_llava/{args.ds}.jsonl',
     #                           f'result_llava/answers/merge_{args.ds}.jsonl')

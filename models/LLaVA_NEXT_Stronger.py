@@ -8,7 +8,6 @@ from llava.mm_utils import process_images, tokenizer_image_token
 from llava.model.builder import load_pretrained_model
 
 from models.BenchmarkModel import BenchmarkModel
-from models.LLaVA import device_map
 
 
 class LLaVA_NEXT_Stronger(BenchmarkModel):
