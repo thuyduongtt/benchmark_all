@@ -23,6 +23,7 @@ case $1 in
     CONDA_ENV="owl3"
     MODEL_NAME="mantis_idefics2"
     ;;
+esac
 
 source activate $CONDA_ENV
 
