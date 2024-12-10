@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-DS_PATH="dataset.json"
+DS_PATH="benchmark/dataset.json"
 MODEL_TYPE=""
 
 case $1 in
