@@ -1,0 +1,35 @@
+[
+  {
+    "image": "img1.png",
+    "questions": [
+      "What is the current state of the traffic lights for the vehicles in this scene?",
+      "Are there any additional signals visible (e.g., pedestrian crossing signals)?",
+      "How many vehicles are visible in the scene, and what are their positions relative to each other?",
+      "Which vehicles are in motion, and which are stationary?",
+      "How many lanes are present, and what are their intended directions of travel?",
+      "Are there any special road markings, such as bike lanes or turn-only lanes?",
+      "Are there pedestrians visible in the scene? If so, where are they located?",
+      "Are there crosswalks or pedestrian-friendly areas visible?",
+      "What types of structures (e.g., buildings, signs) are present, and how do they influence the scene?",
+      "Are there any construction activities visible that could affect traffic flow?",
+      "Are all vehicles complying with traffic signals and road markings?",
+      "Are there any visible violations, such as vehicles stopping beyond the stop line?",
+      "What is the weather like, and does it affect visibility or road conditions?",
+      "Are there any shadows or lighting effects that could influence scene interpretation?",
+      "What is the state of the traffic lights?",
+      "Are there any other visible signals?",
+      "How many vehicles are in the scene?",
+      "Which vehicles are moving or stationary?",
+      "How many lanes are there, and what are their directions?",
+      "Are there any special road markings?",
+      "Are there pedestrians in the scene? Where?",
+      "Are crosswalks visible?",
+      "What buildings or signs are visible?",
+      "Is construction affecting traffic?",
+      "Are vehicles following traffic rules?",
+      "Are there any violations?",
+      "What is the weather like?",
+      "Do shadows or lighting affect the scene?"
+    ]
+  }
+]
