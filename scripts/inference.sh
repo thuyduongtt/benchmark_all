@@ -2,7 +2,6 @@
 
 
 DS_PATH="benchmark/dataset.json"
-MODEL_TYPE=""
 
 case $1 in
 # ======================================== mPLUGOwl3
@@ -20,10 +19,9 @@ esac
 
 source activate $CONDA_ENV
 
-OUTPUT_NAME=${MODEL_NAME}_${MODEL_TYPE}
+OUTPUT_NAME=${MODEL_NAME}
 
 python -m benchmark.start \
   --ds_path $DS_PATH \
   --model_name $MODEL_NAME \
-  --model_type $MODEL_TYPE \
   --output_name inference_${OUTPUT_NAME}
