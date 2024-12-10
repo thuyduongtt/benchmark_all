@@ -17,10 +17,12 @@ def inference(task, dataset_path, output_name):
             'answers': []
         }
         for question in sample['questions']:
-            answer = task(sample['image'], {
-                'row_data': question
-            })
+            # answer = task(sample['image'], {
+            #     'row_data': question
+            # })
+            answer = 'answer'
             output_obj['answers'].append(answer)
+        outputs.append(output_obj)
 
     json.dump(outputs, open(f'{output_name}.json', 'w'))
 
