@@ -17,10 +17,9 @@ def inference(task, dataset_path, output_name):
             'answers': []
         }
         for question in sample['questions']:
-            # answer = task(sample['image'], {
-            #     'row_data': question
-            # })
-            answer = 'answer'
+            answer = task(sample['image'], {
+                'row_data': question
+            })
             output_obj['answers'].append(answer)
         outputs.append(output_obj)
 

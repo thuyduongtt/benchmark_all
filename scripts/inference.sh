@@ -10,6 +10,10 @@ case $1 in
     CONDA_ENV="owl3"
     MODEL_NAME="mPLUGOwl3"
     ;;
+  2)
+    CONDA_ENV="mantis_siglip"
+    MODEL_NAME="mantis_siglip"
+    ;;
 
 esac
 

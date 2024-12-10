@@ -1,6 +1,6 @@
 [
   {
-    "image": "img1.png",
+    "image": "benchmark/img1.png",
     "questions": [
       "What is the current state of the traffic lights for the vehicles in this scene?",
       "Are there any additional signals visible (e.g., pedestrian crossing signals)?",
