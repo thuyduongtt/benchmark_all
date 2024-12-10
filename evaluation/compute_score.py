@@ -8,7 +8,7 @@ import torch
 from sentence_transformers import SentenceTransformer, util
 
 from evaluation.CONSTS import *
-from evaluation.utils import get_all_csv
+from evaluation.utils import get_all_csv, extract_answer_idefics2
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -102,7 +102,7 @@ has_scene_graph
 '''
 
 
-def compute_score(list_of_csv, output_dir, limit=0):
+def compute_score(list_of_csv, output_dir, limit=0, extract_answer_fn=None):
     if not Path(output_dir).exists():
         Path(output_dir).mkdir(parents=True)
 
@@ -136,7 +136,11 @@ def compute_score(list_of_csv, output_dir, limit=0):
             prediction_str = str(row['prediction']).lower()
             if prediction_str.startswith('['):
                 prediction_str = ast.literal_eval(prediction_str)[0]
-            prediction = extract_answer(prediction_str)
+
+            if extract_answer_fn is not None:
+                prediction = extract_answer_fn(prediction_str, lowercase=True)
+            else:
+                prediction = extract_answer(prediction_str)
 
             # compute all scores
             if 'exact_match' in METRICS:
@@ -162,4 +166,4 @@ if __name__ == '__main__':
     all_csv_files = []
     get_all_csv(args.result_dir, all_csv_files)
 
-    compute_score(all_csv_files, f'{args.result_dir}/score')
+    compute_score(all_csv_files, f'{args.result_dir}/score', extract_answer_fn=extract_answer_idefics2)

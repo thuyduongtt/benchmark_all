@@ -63,27 +63,6 @@ def run_pipeline_by_question(task, ds_name, ds_dir, img_dir, output_dir_name, li
     csv_file.close()
 
 
-'''
-n_questions: int
-exported_time: datetime
-questions: array
-    image_id
-    image_name
-    image_dir
-    dataset_name
-    question_id
-    question
-    answers
-    answers_scores
-    choices
-    choice_scores
-    property_id
-    property_label
-    n_hop
-    has_scene_graph
-'''
-
-
 def stream_data(ds_name, ds_dir, ds_split, limit=0, start_at=0):
     if ds_name == 'ReasonVQA':
         return stream_data_reasonvqa(ds_dir, ds_split, limit, start_at)

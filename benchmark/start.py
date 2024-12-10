@@ -1,22 +1,57 @@
 import argparse
-
+import json
 from benchmark.pipeline import run_pipeline_by_question
+
+# MODE = 'pipeline'
+MODE = 'inference'
+
+
+def inference(task, dataset_path, output_name):
+    dataset = json.load(open(dataset_path))
+
+    outputs = []
+
+    for sample in dataset:
+        output_obj = {
+            'image': sample['image'],
+            'answers': []
+        }
+        for question in sample['questions']:
+            answer = task(sample['image'], {
+                'row_data': question
+            })
+            output_obj['answers'].append(answer)
+
+    json.dump(outputs, open(f'{output_name}.json', 'w'))
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ds_name', type=str, default='ReasonVQA', help='Valid input: ReasonVQA, VQAv2, OKVQA, GQA')
-    parser.add_argument('--ds_dir', type=str, required=True, help='Path to dataset')
-    parser.add_argument('--img_dir', type=str, default='', help='Path to images')
-    parser.add_argument('--output_dir_name', type=str, default='output', help='Path to output')
-    parser.add_argument('--split', type=str, default='train', help='Set to "train" or "test"')
-    parser.add_argument('--start_at', type=int, default=0, help='Index of the sample to start from')
-    parser.add_argument('--limit', type=int, default=0, help='Max number of samples')
-    parser.add_argument('--multichoice', action='store_true')
-    parser.add_argument('--model_name', type=str, default='mPLUGOwl2')
-    parser.add_argument('--model_type', type=str, default=None)
+
+    # for benchmarking the entire dataset
+    if MODE == 'pipeline':
+        parser.add_argument('--ds_name', type=str, default='ReasonVQA',
+                            help='Valid input: ReasonVQA, VQAv2, OKVQA, GQA')
+        parser.add_argument('--ds_dir', type=str, required=True, help='Path to dataset')
+        parser.add_argument('--img_dir', type=str, default='', help='Path to images')
+        parser.add_argument('--output_dir_name', type=str, default='output', help='Path to output')
+        parser.add_argument('--split', type=str, default='train', help='Set to "train" or "test"')
+        parser.add_argument('--start_at', type=int, default=0, help='Index of the sample to start from')
+        parser.add_argument('--limit', type=int, default=0, help='Max number of samples')
+        parser.add_argument('--multichoice', action='store_true')
+        parser.add_argument('--model_name', type=str, default='mPLUGOwl2')
+        parser.add_argument('--model_type', type=str, default=None)
+
+    # for inference concrete examples
+    else:
+        parser.add_argument('--ds_path', type=str, default='benchmark/dataset.json')
+        parser.add_argument('--model_name', type=str, default='mPLUGOwl3')
+        parser.add_argument('--model_type', type=str, default=None)
+        parser.add_argument('--output_name', type=str, default='output')
+
     args = parser.parse_args()
 
-    if not args.img_dir:
+    if MODE == 'pipeline' and not args.img_dir:
         args.img_dir = args.ds_dir
 
     print(args)
@@ -75,6 +110,9 @@ if __name__ == '__main__':
 
     assert model is not None, 'Invalid model name'
 
-    run_pipeline_by_question(model.run_vqa_task, args.ds_name, args.ds_dir, args.img_dir, args.output_dir_name,
-                             limit=args.limit,
-                             start_at=args.start_at, split=args.split, multichoice=args.multichoice)
+    if MODE == 'pipeline':
+        run_pipeline_by_question(model.run_vqa_task, args.ds_name, args.ds_dir, args.img_dir, args.output_dir_name,
+                                 limit=args.limit,
+                                 start_at=args.start_at, split=args.split, multichoice=args.multichoice)
+    else:
+        inference(model.run_vqa_task, args.ds_path, args.output_name)

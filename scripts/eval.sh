@@ -28,5 +28,5 @@ esac
 
 source activate evaluation
 
-python -m evaluation.compute_score --result_dir results/$RESULT_DIR
+python -m evaluation.compute_score --result_dir results/ReasonVQA/$RESULT_DIR
 
