@@ -22,4 +22,4 @@ python -m benchmark.start \
   --ds_path $DS_PATH \
   --model_name $MODEL_NAME \
   --model_type $MODEL_TYPE \
-  --output_name output_${OUTPUT_NAME}
+  --output_name inference_${OUTPUT_NAME}
