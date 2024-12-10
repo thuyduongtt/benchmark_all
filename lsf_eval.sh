@@ -34,6 +34,9 @@ module load conda
 # cd ~/
  
 # Perform experiments
+
+chmod +x scripts/*.sh
+
 ./scripts/eval.sh $LSB_JOBINDEX
 
 
