@@ -2,8 +2,8 @@ import argparse
 import json
 from benchmark.pipeline import run_pipeline_by_question
 
-# MODE = 'pipeline'
-MODE = 'inference'
+MODE = 'pipeline'
+# MODE = 'inference'
 
 
 def inference(task, dataset_path, output_name):
@@ -108,6 +108,11 @@ if __name__ == '__main__':
         from models.MantisIdefics2 import MantisIdefics2
 
         model = MantisIdefics2()
+
+    elif args.model_name == 'llava_ov':
+        from models.LLaVA_OV import LLaVA_OV
+
+        model = LLaVA_OV()
 
     assert model is not None, 'Invalid model name'
 

@@ -302,6 +302,55 @@ case $1 in
     START=60000
     MULTICHOICE=false
     ;;
+  # ======================================== LLaVA-OV
+    49)
+      CONDA_ENV="llava_ov"
+      MODEL_NAME="llava_ov"
+      START=0
+      MULTICHOICE=true
+      ;;
+    50)
+      CONDA_ENV="llava_ov"
+      MODEL_NAME="llava_ov"
+      START=20000
+      MULTICHOICE=true
+      ;;
+    51)
+      CONDA_ENV="llava_ov"
+      MODEL_NAME="llava_ov"
+      START=40000
+      MULTICHOICE=true
+      ;;
+    52)
+      CONDA_ENV="llava_ov"
+      MODEL_NAME="llava_ov"
+      START=60000
+      MULTICHOICE=true
+      ;;
+    53)
+      CONDA_ENV="llava_ov"
+      MODEL_NAME="llava_ov"
+      START=0
+      MULTICHOICE=false
+      ;;
+    54)
+      CONDA_ENV="llava_ov"
+      MODEL_NAME="llava_ov"
+      START=20000
+      MULTICHOICE=false
+      ;;
+    55)
+      CONDA_ENV="llava_ov"
+      MODEL_NAME="llava_ov"
+      START=40000
+      MULTICHOICE=false
+      ;;
+    56)
+      CONDA_ENV="llava_ov"
+      MODEL_NAME="llava_ov"
+      START=60000
+      MULTICHOICE=false
+      ;;
 
 esac
 
