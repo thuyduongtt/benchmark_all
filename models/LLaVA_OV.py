@@ -16,7 +16,7 @@ class LLaVA_OV(BenchmarkModel):
     def __init__(self):
         super().__init__()
         # self.MODEL_PATH = 'lmms-lab/llava-onevision-qwen2-7b-ov-chat'
-        self.MODEL_PATH = 'lmms-lab/llava-onevision-qwen2-72b-ov-chat'
+        self.MODEL_PATH = 'lmms-lab/llava-onevision-qwen2-0.5b-si'
         self.MODEL_NAME = 'llava_qwen'
         self.model = None
         self.tokenizer = None
