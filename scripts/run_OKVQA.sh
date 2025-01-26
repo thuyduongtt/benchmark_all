@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DS_NAME="OKVQA"
-MULTICHOICE=true
+MULTICHOICE=false
 
 DS_DIR="../dataset/${DS_NAME}"
 IMG_DIR="../dataset/COCO/val2014"
@@ -26,6 +26,10 @@ case $1 in
   5)
     CONDA_ENV="lavis"
     MODEL_NAME="blip2_t5"
+    ;;
+  6)
+    CONDA_ENV="llava_ov"
+    MODEL_NAME="llava_ov"
     ;;
 esac
 

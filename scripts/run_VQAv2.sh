@@ -2,7 +2,7 @@
 
 LIMIT=30000
 DS_NAME="VQAv2"
-MULTICHOICE=true
+MULTICHOICE=false
 
 DS_DIR="../dataset/${DS_NAME}"
 IMG_DIR="../dataset/COCO/val2014"
@@ -169,6 +169,47 @@ case $1 in
   32)
     CONDA_ENV="owl3"
     MODEL_NAME="mantis_idefics2"
+    START=210000
+    ;;
+
+  33)
+    CONDA_ENV="llava_ov"
+    MODEL_NAME="llava_ov"
+    START=0
+    ;;
+  34)
+    CONDA_ENV="llava_ov"
+    MODEL_NAME="llava_ov"
+    START=30000
+    ;;
+  35)
+    CONDA_ENV="llava_ov"
+    MODEL_NAME="llava_ov"
+    START=60000
+    ;;
+  36)
+    CONDA_ENV="llava_ov"
+    MODEL_NAME="llava_ov"
+    START=90000
+    ;;
+  37)
+    CONDA_ENV="llava_ov"
+    MODEL_NAME="llava_ov"
+    START=120000
+    ;;
+  38)
+    CONDA_ENV="llava_ov"
+    MODEL_NAME="llava_ov"
+    START=150000
+    ;;
+  39)
+    CONDA_ENV="llava_ov"
+    MODEL_NAME="llava_ov"
+    START=180000
+    ;;
+  40)
+    CONDA_ENV="llava_ov"
+    MODEL_NAME="llava_ov"
     START=210000
     ;;
 esac
