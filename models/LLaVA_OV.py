@@ -65,7 +65,7 @@ class LLaVA_OV(BenchmarkModel):
             image_sizes=image_sizes,
             do_sample=False,
             temperature=0,
-            max_new_tokens=256,
+            max_new_tokens=4096,
         )
         outputs = self.tokenizer.batch_decode(cont, skip_special_tokens=True)
 
