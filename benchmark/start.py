@@ -114,6 +114,11 @@ if __name__ == '__main__':
 
         model = LLaVA_OV()
 
+    elif args.model_name == 'qwen':
+        from models.Qwen import Qwen
+
+        model = Qwen()
+
     assert model is not None, 'Invalid model name'
 
     if MODE == 'pipeline':

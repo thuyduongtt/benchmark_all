@@ -421,25 +421,31 @@ def evaluate(result_root, result_dirs, ds_root, is_reasonvqa=True, agg='avg'):
 
 
 if __name__ == '__main__':
+    DS_NAME = 'ReasonVQA'
     DS_ROOT = '/mnt/WORK/Code/Masters/ds/ReasonVQA_subset/unbalanced'
-    RESULT_ROOT = '/mnt/WORK/Code/Masters/VQAModels/benchmark_all/results/ReasonVQA'
+    RESULT_ROOT = '/mnt/WORK/Code/Masters/VQAModels/benchmark_all/results/' + DS_NAME
     DIRS = [
-        {'name': 'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        {'name': 'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        {'name': 'output_mPLUGOwl2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        {'name': 'output_idefics2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        {'name': 'output_mantis_siglip__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        {'name': 'output_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        # {'name': 'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        # {'name': 'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        # {'name': 'output_mPLUGOwl2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        # {'name': 'output_idefics2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        # {'name': 'output_mantis_siglip__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        # {'name': 'output_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        # {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        {'name': 'output_llava_ov__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
 
-        {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        {'name': 'output_mc_mPLUGOwl2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        {'name': 'output_mc_idefics2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True,
-         'extract_fn': extract_answer_idefics2},
-        {'name': 'output_mc_mantis_siglip__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        {'name': 'output_mc_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        # {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        # {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        # {'name': 'output_mc_mPLUGOwl2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        # {'name': 'output_mc_idefics2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True,
+        #  'extract_fn': extract_answer_idefics2},
+        # {'name': 'output_mc_mantis_siglip__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        # {'name': 'output_mc_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        # {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+
+        # {'name': 'output_llava_ov__OKVQA', 'multichoice': False, 'reasonvqa': False},
+        # {'name': 'output_llava_ov__VQAv2', 'multichoice': False, 'reasonvqa': False},
 
         # {'name': 'output_mc_idefics2__OKVQA', 'multichoice': True, 'reasonvqa': False,
         #  'extract_fn': extract_answer_idefics2},
@@ -452,5 +458,6 @@ if __name__ == '__main__':
         # {'name': 'output_mc_mPLUGOwl3__VQAv2', 'multichoice': True, 'reasonvqa': False},
     ]
 
-    for a in ['avg', 'std', 'sem']:
-        evaluate(RESULT_ROOT, DIRS, DS_ROOT, is_reasonvqa=True, agg=a)
+    # for a in ['avg', 'std', 'sem']:
+    for a in ['avg']:
+        evaluate(RESULT_ROOT, DIRS, DS_ROOT, is_reasonvqa=DS_NAME == 'ReasonVQA', agg=a)

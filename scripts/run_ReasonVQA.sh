@@ -351,6 +351,55 @@ case $1 in
       START=60000
       MULTICHOICE=false
       ;;
+  # ======================================== Qwen
+    57)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen"
+      START=0
+      MULTICHOICE=true
+      ;;
+    58)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen"
+      START=20000
+      MULTICHOICE=true
+      ;;
+    59)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen"
+      START=40000
+      MULTICHOICE=true
+      ;;
+    60)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen"
+      START=60000
+      MULTICHOICE=true
+      ;;
+    61)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen"
+      START=0
+      MULTICHOICE=false
+      ;;
+    62)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen"
+      START=20000
+      MULTICHOICE=false
+      ;;
+    63)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen"
+      START=40000
+      MULTICHOICE=false
+      ;;
+    64)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen"
+      START=60000
+      MULTICHOICE=false
+      ;;
 
 esac
 
