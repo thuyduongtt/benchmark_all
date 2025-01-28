@@ -12,7 +12,6 @@ class Qwen(BenchmarkModel):
         # self.MODEL_PATH = 'Qwen/Qwen2.5-VL-72B-Instruct'
         self.MODEL_PATH = 'Qwen/Qwen2.5-VL-7B-Instruct'
         self.model = None
-        self.tokenizer = None
         self.processor = None
 
     def load_model(self):
