@@ -1,6 +1,7 @@
 import ijson
-from datasets import Dataset, Image
+# from datasets import Dataset, Image
 import argparse
+import json
 
 
 def stream_data_reasonvqa(ds_dir, ds_split='train', limit=0, start_at=0):
@@ -37,19 +38,26 @@ if __name__ == '__main__':
     args = parser.parse_args()
     img_dir = args.ds_dir
 
-    data = {
-        'image': [],
-        'question': [],
-        'answer': []
-    }
+    # data = {
+    #     'image': [],
+    #     'question': [],
+    #     'answer': []
+    # }
 
     json_data = stream_data_reasonvqa(args.ds_dir, limit=args.limit, start_at=args.start_at)
-    for d in json_data:
-        data['image'].append(img_dir + '/' + d['image_path'])
-        data['question'].append(d['question'])
-        data['answer'].append(d['answers'])
 
-    dataset = Dataset.from_dict(data)
-    dataset = dataset.cast_column('image', Image())
+    with open('dataset.jsonl', 'w') as f:
+        for d in json_data:
+            f.write(json.dumps({
+                'image': img_dir + '/' + d['image_path'],
+                'question': d['question'],
+                'answers': d['answers']
+            }))
+            f.write('\n')
+            # data['image'].append(img_dir + '/' + d['image_path'])
+            # data['question'].append(d['question'])
+            # data['answer'].append(d['answers'])
 
-    dataset.save_to_disk('processed_dataset')
+    # dataset = Dataset.from_dict(data)
+    # dataset = dataset.cast_column('image', Image())
+    # dataset.save_to_disk('processed_dataset')
