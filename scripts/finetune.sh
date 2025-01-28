@@ -15,12 +15,12 @@ esac
 source activate finetune
 
 # Step 1: Preparee the dataset
-python -m finetune.prepare_dataset --ds_dir $DS_DIR
+#python -m finetune.prepare_dataset --ds_dir $DS_DIR
 
 # Step 2: Start finetuning
 #axolotl train finetune/${CONFIG_FILE}
 #accelerate launch -m axolotl.cli.train finetune/${CONFIG_FILE}
 
-#cp llama-factory/reasonvqa.json LLaMA-Factory/data/reasonvqa.json
-#cd LLaMA-Factory
-#llamafactory-cli train ../finetune/llama-factory_qwen2-vl.yaml
+cp llama-factory/reasonvqa.json LLaMA-Factory/data/reasonvqa.json
+cd LLaMA-Factory
+llamafactory-cli train ../finetune/llama-factory_qwen2-vl.yaml
