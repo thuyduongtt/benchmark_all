@@ -1,4 +1,4 @@
-#BSUB -J FT                 # Specify the job name
+#BSUB -J Qwen[7]                 # Specify the job name
 #BSUB -W 168:00                # Specify the maximum runtime in "hours:minutes"
 #BSUB -o %x.%j.out            # Determine where the output will be written
 #BSUB -e %x.%j.err            # The same goes for the error file
@@ -37,11 +37,11 @@ module load conda
 
 chmod -R +x scripts
 
-#./scripts/run_ReasonVQA.sh $LSB_JOBINDEX
-#./scripts/run_OKVQA.sh $LSB_JOBINDEX
-#./scripts/run_VQAv2.sh $LSB_JOBINDEX
+#./scripts/benchmark/run_ReasonVQA.sh $LSB_JOBINDEX
+./scripts/benchmark/run_OKVQA.sh $LSB_JOBINDEX
+#./scripts/benchmark/run_VQAv2.sh $LSB_JOBINDEX
 #./scripts/inference.sh $LSB_JOBINDEX
-./scripts/finetune.sh
+#./scripts/finetune.sh
 
 # No longer exit on any error.
 set +e

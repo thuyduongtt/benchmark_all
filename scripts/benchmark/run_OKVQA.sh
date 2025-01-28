@@ -31,7 +31,7 @@ case $1 in
     CONDA_ENV="llava_ov"
     MODEL_NAME="llava_ov"
     ;;
-  6)
+  7)
     CONDA_ENV="qwen"
     MODEL_NAME="qwen2"
     ;;
