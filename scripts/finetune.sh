@@ -19,4 +19,6 @@ source activate finetune
 # Step 2: Start finetuning
 #axolotl train finetune/${CONFIG_FILE}
 #accelerate launch -m axolotl.cli.train finetune/${CONFIG_FILE}
-llamafactory-cli train finetune/llama-factory_qwen2-vl.yaml
+
+cd LLaMA-Factory
+llamafactory-cli train ../finetune/llama-factory_qwen2-vl.yaml
