@@ -35,7 +35,7 @@ module load conda
  
 # Perform experiments
 
-chmod +x scripts/**/**.sh
+chmod -R +x scripts
 
 #./scripts/run_ReasonVQA.sh $LSB_JOBINDEX
 #./scripts/run_OKVQA.sh $LSB_JOBINDEX
