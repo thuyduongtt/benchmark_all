@@ -9,17 +9,21 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 class Qwen(BenchmarkModel):
     def __init__(self):
         super().__init__()
-        self.MODEL_PATH = 'Qwen/Qwen2.5-VL-72B-Instruct'
+        # self.MODEL_PATH = 'Qwen/Qwen2.5-VL-72B-Instruct'
+        self.MODEL_PATH = 'Qwen/Qwen2.5-VL-7B-Instruct'
         self.model = None
         self.tokenizer = None
         self.processor = None
 
     def load_model(self):
-        model = Qwen2_5_VLForConditionalGeneration.from_pretrained(self.MODEL_PATH,
-                                                                   torch_dtype=torch.bfloat16,
-                                                                   attn_implementation="flash_attention_2",
-                                                                   device_map="auto")
-        processor = AutoProcessor.from_pretrained(self.MODEL_PATH)
+        model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+            self.MODEL_PATH,
+            torch_dtype=torch.bfloat16,
+            attn_implementation="flash_attention_2",
+            device_map="auto")
+        min_pixels = 256 * 28 * 28
+        max_pixels = 1280 * 28 * 28
+        processor = AutoProcessor.from_pretrained(self.MODEL_PATH, min_pixels=min_pixels, max_pixels=max_pixels)
         self.model = model
         self.processor = processor
 
@@ -74,8 +78,3 @@ class Qwen(BenchmarkModel):
             return f'{outputs} | {[c["symbol"] + ". " + c["choice"] for c in list_of_choices]}'
 
         return outputs
-
-
-if __name__ == '__main__':
-    m = LLaVA_OV()
-    m.test_model()
