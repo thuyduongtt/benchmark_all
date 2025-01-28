@@ -15,4 +15,4 @@ source activate finetune
 
 cp llama-factory/reasonvqa.json LLaMA-Factory/data/reasonvqa.json
 cd LLaMA-Factory
-llamafactory-cli train ../finetune/llama-factory_qwen2-vl.yaml
+WANDB_API_KEY=d2057d23808005ee64d642613fc1c20e971f6f71 llamafactory-cli train ../finetune/llama-factory_qwen2-vl.yaml
