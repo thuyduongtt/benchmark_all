@@ -114,10 +114,15 @@ if __name__ == '__main__':
 
         model = LLaVA_OV()
 
-    elif args.model_name == 'qwen':
-        from models.Qwen import Qwen
+    elif args.model_name == 'qwen2':
+        from models.Qwen import Qwen2
 
-        model = Qwen()
+        model = Qwen2()
+
+    elif args.model_name == 'qwen25':
+        from models.Qwen import Qwen25
+
+        model = Qwen25()
 
     assert model is not None, 'Invalid model name'
 

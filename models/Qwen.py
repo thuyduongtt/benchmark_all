@@ -1,5 +1,5 @@
 import torch
-from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
+from transformers import Qwen2_5_VLForConditionalGeneration, Qwen2VLForConditionalGeneration, AutoProcessor
 from qwen_vl_utils import process_vision_info
 from models.BenchmarkModel import BenchmarkModel
 
@@ -7,15 +7,14 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
 class Qwen(BenchmarkModel):
-    def __init__(self):
+    def __init__(self, model_path):
         super().__init__()
-        # self.MODEL_PATH = 'Qwen/Qwen2.5-VL-72B-Instruct'
-        self.MODEL_PATH = 'Qwen/Qwen2.5-VL-7B-Instruct'
+        self.MODEL_PATH = model_path
         self.model = None
         self.processor = None
 
-    def load_model(self):
-        model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+    def _load_model(self, model_init_func):
+        model = model_init_func(
             self.MODEL_PATH,
             torch_dtype=torch.bfloat16,
             attn_implementation="flash_attention_2",
@@ -25,6 +24,9 @@ class Qwen(BenchmarkModel):
         processor = AutoProcessor.from_pretrained(self.MODEL_PATH, min_pixels=min_pixels, max_pixels=max_pixels)
         self.model = model
         self.processor = processor
+
+    def load_model(self):
+        pass
 
     def run_vqa_task(self, image, row_data, choices=None):
         if self.model is None:
@@ -77,3 +79,18 @@ class Qwen(BenchmarkModel):
             return f'{outputs} | {[c["symbol"] + ". " + c["choice"] for c in list_of_choices]}'
 
         return outputs
+
+
+class Qwen25(Qwen):
+    def __init__(self):
+        super().__init__('Qwen/Qwen2.5-VL-7B-Instruct')  # or 'Qwen/Qwen2.5-VL-72B-Instruct'
+
+    def load_model(self):
+        super()._load_model(Qwen2_5_VLForConditionalGeneration.from_pretrained)
+
+class Qwen2(Qwen):
+    def __init__(self):
+        super().__init__('Qwen/Qwen2-VL-7B-Instruct')
+
+    def load_model(self):
+        super()._load_model(Qwen2VLForConditionalGeneration.from_pretrained)
