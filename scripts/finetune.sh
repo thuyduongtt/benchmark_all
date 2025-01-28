@@ -13,5 +13,8 @@ esac
 
 source activate finetune
 
-python -m finetune.prepare_dataset --ds_dir $DS_DIR --start_at $START --limit $LIMIT
+# Step 1: Preparee the dataset
+#python -m finetune.prepare_dataset --ds_dir $DS_DIR
+
+# Step 2: Start finetuning
 axolotl train -c finetune/${CONFIG_FILE}
