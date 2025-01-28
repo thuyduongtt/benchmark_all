@@ -36,6 +36,8 @@ warmup_ratio: 0.1
 bf16: true
 ddp_timeout: 180000000
 
+WANDB_API_KEY: d2057d23808005ee64d642613fc1c20e971f6f71
+
 ### eval
 # val_size: 0.1
 # per_device_eval_batch_size: 1
