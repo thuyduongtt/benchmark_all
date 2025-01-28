@@ -17,4 +17,4 @@ source activate finetune
 #python -m finetune.prepare_dataset --ds_dir $DS_DIR
 
 # Step 2: Start finetuning
-axolotl train -c finetune/${CONFIG_FILE}
+axolotl train finetune/${CONFIG_FILE}
