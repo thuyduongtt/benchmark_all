@@ -57,4 +57,4 @@ if __name__ == '__main__':
             "images": [img_dir + '/' + d['image_path']]
         })
 
-    json.dump(data, open('llama-factory/dataset.json', 'w'))
+    json.dump(data, open('llama-factory/reasonvqa.json', 'w'))
