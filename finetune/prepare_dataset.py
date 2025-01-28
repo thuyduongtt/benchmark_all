@@ -2,6 +2,7 @@ import ijson
 # from datasets import Dataset, Image
 import argparse
 import json
+from pathlib import Path
 
 
 def stream_data_reasonvqa(ds_dir, ds_split='train', limit=0, start_at=0):
@@ -38,26 +39,22 @@ if __name__ == '__main__':
     args = parser.parse_args()
     img_dir = args.ds_dir
 
-    # data = {
-    #     'image': [],
-    #     'question': [],
-    #     'answer': []
-    # }
+    if not Path('llama-factory').exists():
+        Path('llama-factory').mkdir()
 
     json_data = stream_data_reasonvqa(args.ds_dir, limit=args.limit, start_at=args.start_at)
 
-    with open('dataset.jsonl', 'w') as f:
-        for d in json_data:
-            f.write(json.dumps({
-                'image': img_dir + '/' + d['image_path'],
-                'question': d['question'],
-                'answers': d['answers']
-            }))
-            f.write('\n')
-            # data['image'].append(img_dir + '/' + d['image_path'])
-            # data['question'].append(d['question'])
-            # data['answer'].append(d['answers'])
+    data = []
+    for d in json_data:
+        data.append({
+            "conversations": [{
+                "from": "human",
+                "value": "<image>" + d['question']
+            }, {
+                "from": "gpt",
+                "value": d['answers'][0]
+            }],
+            "images": [img_dir + '/' + d['image_path']]
+        })
 
-    # dataset = Dataset.from_dict(data)
-    # dataset = dataset.cast_column('image', Image())
-    # dataset.save_to_disk('processed_dataset')
+    json.dump(data, open('llama-factory/dataset.json', 'w'))
