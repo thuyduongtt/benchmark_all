@@ -21,7 +21,7 @@ peft:
   lora_alpha: 16
   lora_dropout: 0.05
 trainer:
-  type: "accelerate"  # Choose from "deepspeed" or "accelerate"
+  type: "deepspeed"  # Choose from "deepspeed" or "accelerate"
 #  deepspeed_config: "path/to/deepspeed_config.json"  # Optional, for advanced distributed training
 logging:
   log_interval: 50
