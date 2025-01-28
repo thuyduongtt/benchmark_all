@@ -3,14 +3,6 @@
 DS_VERSION="unbalanced"
 #DS_DIR="../dataset/${DS_VERSION}"
 DS_DIR="/fs/scratch/rb_bd_dlp_rng_dl01_cr_ICT_employees/trh7rng/dataset/${DS_VERSION}"
-CONFIG_FILE=""
-
-case $1 in
-  1)
-    CONFIG_FILE="qwen2.5-vl.yaml"
-    ;;
-
-esac
 
 source activate finetune
 
