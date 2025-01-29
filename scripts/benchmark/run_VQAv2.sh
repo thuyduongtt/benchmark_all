@@ -212,6 +212,47 @@ case $1 in
     MODEL_NAME="llava_ov"
     START=210000
     ;;
+
+  41)
+    CONDA_ENV="qwen"
+    MODEL_NAME="qwen25"
+    START=0
+    ;;
+  42)
+    CONDA_ENV="qwen"
+    MODEL_NAME="qwen25"
+    START=30000
+    ;;
+  43)
+    CONDA_ENV="qwen"
+    MODEL_NAME="qwen25"
+    START=60000
+    ;;
+  44)
+    CONDA_ENV="qwen"
+    MODEL_NAME="qwen25"
+    START=90000
+    ;;
+  45)
+    CONDA_ENV="qwen"
+    MODEL_NAME="qwen25"
+    START=120000
+    ;;
+  46)
+    CONDA_ENV="qwen"
+    MODEL_NAME="qwen25"
+    START=150000
+    ;;
+  47)
+    CONDA_ENV="qwen"
+    MODEL_NAME="qwen25"
+    START=180000
+    ;;
+  48)
+    CONDA_ENV="qwen"
+    MODEL_NAME="qwen25"
+    START=210000
+    ;;
 esac
 
 source activate $CONDA_ENV
