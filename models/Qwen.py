@@ -96,22 +96,8 @@ class Qwen2(Qwen):
         super()._load_model(Qwen2VLForConditionalGeneration.from_pretrained)
 
 class Qwen2Finetuned(Qwen):
-    from llmtuner.chat import ChatModel
-
     def __init__(self):
-        super().__init__('Qwen/Qwen2-VL-7B-Instruct')
+        super().__init__('LLaMA-Factory/models/qwen2_vl_lora_sft')
 
     def load_model(self):
-        args = dict(
-            model_name_or_path= self.MODEL_PATH, # use bnb-4bit-quantized Llama-3-8B-Instruct model
-            adapter_name_or_path="LLaMA-Factory/finetune/qwen2_vl-7b/lora/sft",            # load the saved LoRA adapters
-            template="qwen2_vl",                     # same to the one in training
-            finetuning_type="lora",                  # same to the one in training
-            quantization_bit=4,                         # load 4-bit quantized model
-        )
-        model = ChatModel(args)
-        min_pixels = 256 * 28 * 28
-        max_pixels = 1280 * 28 * 28
-        processor = AutoProcessor.from_pretrained(self.MODEL_PATH, min_pixels=min_pixels, max_pixels=max_pixels)
-        self.model = model
-        self.processor = processor
+        super()._load_model(Qwen2VLForConditionalGeneration.from_pretrained)
