@@ -46,9 +46,9 @@ def run_pipeline_by_question(task, ds_name, ds_dir, img_dir, output_dir_name, li
 
         if multichoice:
             shuffled_choices, _ = shuffle(d['choices'], d['choice_scores'])
-            prediction = task(img_path, d, shuffled_choices, img_url=d['image_url'])
+            prediction = task(img_path, d, shuffled_choices, image_url=d['image_url'])
         else:
-            prediction = task(img_path, d, img_url=d['image_url'])
+            prediction = task(img_path, d, image_url=d['image_url'])
 
         # prediction = 'prediction'  # turn off model for pipeline testing
 
