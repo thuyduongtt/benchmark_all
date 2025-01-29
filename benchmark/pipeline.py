@@ -46,9 +46,9 @@ def run_pipeline_by_question(task, ds_name, ds_dir, img_dir, output_dir_name, li
 
         if multichoice:
             shuffled_choices, _ = shuffle(d['choices'], d['choice_scores'])
-            prediction = task(img_path, d, shuffled_choices)
+            prediction = task(img_path, d, shuffled_choices, img_url=d['image_url'])
         else:
-            prediction = task(img_path, d)
+            prediction = task(img_path, d, img_url=d['image_url'])
 
         # prediction = 'prediction'  # turn off model for pipeline testing
 
@@ -95,7 +95,8 @@ def stream_data_reasonvqa(ds_dir, ds_split, limit=0, start_at=0):
                 'choice_scores': record['choice_scores'],
                 'n_hop': record['n_hop'],
                 'has_scene_graph': record['has_scene_graph'],
-                'image_path': f"{ds_split}/{record['image_id']}.jpg"
+                'image_path': f"{ds_split}/{record['image_id']}.jpg",
+                'image_url': f"{record['dataset_name']}/{record['image_dir']}/{record['image_name']}"
             }
 
 
@@ -154,7 +155,8 @@ def stream_data_vqa(ds_dir, limit=0, start_at=0, okvqa=False):
                 'answers': answers,
                 'choices': choices,
                 'choice_scores': choice_scores,
-                'image_path': f"COCO_val2014_{str(record['image_id']).zfill(12)}.jpg"  # COCO_val2014_000000297147.jpg
+                'image_path': f"COCO_val2014_{str(record['image_id']).zfill(12)}.jpg",  # COCO_val2014_000000297147.jpg
+                'image_url': None
             }
 
 

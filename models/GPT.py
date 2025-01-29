@@ -1,8 +1,7 @@
-import base64
-
 from openai import AzureOpenAI
 
 from models.BenchmarkModel import BenchmarkModel
+import base64
 
 
 class GPT(BenchmarkModel):
@@ -16,18 +15,24 @@ class GPT(BenchmarkModel):
             api_version="2023-07-01-preview"
         )
 
-    def run_vqa_task(self, image, row_data, choices=None):
+    def run_vqa_task(self, image, row_data, choices=None, image_url=None):
         if self.client is None:
             self.load_model()
-
-        with open(image, "rb") as image_file:
-            encoded_img = base64.b64encode(image_file.read())
 
         list_of_choices = []
         if choices is None:
             question = row_data['question'] + ' Output the answer only.'
         else:
             question, list_of_choices = self.build_mc_prompt(row_data['question'], choices)
+
+        if image_url is not None:
+            img_url = f"https://storage.googleapis.com/vqademo/explore/img/{image_url}"
+            print('Load image from URL:', img_url)
+        else:
+            with open(image, "rb") as image_file:
+                encoded_string = base64.b64encode(image_file.read())
+                img_url = f"data:image/jpeg;base64,{encoded_string}"
+                print('Load image from local and convert to base64')
 
         completion = self.client.chat.completions.create(
             model="gpt-4o",
@@ -38,7 +43,7 @@ class GPT(BenchmarkModel):
                         {"type": "text", "text": question},
                         {
                             "type": "image_url",
-                            "image_url": {"url": f"data:image/jpeg;base64,{encoded_img}"},
+                            "image_url": {"url": img_url}
                         },
                     ]
                 },
