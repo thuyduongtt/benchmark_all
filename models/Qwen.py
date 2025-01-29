@@ -48,7 +48,7 @@ class Qwen(BenchmarkModel):
                         "type": "image",
                         "image": image,
                     },
-                    {"type": "text", "text": question},
+                    {"type": "text", "text": question + ' Output the answer only.'},
                 ],
             }
         ]

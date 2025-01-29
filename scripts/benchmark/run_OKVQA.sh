@@ -37,11 +37,11 @@ case $1 in
     ;;
   8)
     CONDA_ENV="qwen"
-    MODEL_NAME="qwen2finetuned"
+    MODEL_NAME="qwen25"
     ;;
   9)
     CONDA_ENV="qwen"
-    MODEL_NAME="qwen25"
+    MODEL_NAME="qwen2finetuned"
     ;;
 esac
 
