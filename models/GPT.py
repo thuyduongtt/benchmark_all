@@ -27,7 +27,7 @@ class GPT(BenchmarkModel):
 
         if image_url is not None:
             img_url = f"https://storage.googleapis.com/vqademo/explore/img/{image_url}"
-            print('Load image from URL:', img_url)
+            # print('Load image from URL:', img_url)
         else:
             with open(image, "rb") as image_file:
                 encoded_string = base64.b64encode(image_file.read())
