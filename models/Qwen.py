@@ -94,3 +94,15 @@ class Qwen2(Qwen):
 
     def load_model(self):
         super()._load_model(Qwen2VLForConditionalGeneration.from_pretrained)
+
+class Qwen2Finetuned(Qwen):
+    def __init__(self):
+        super().__init__('../LLaMA-Factory/finetune/qwen2_vl-7b/lora/sft')
+
+    def load_model(self):
+        super()._load_model(Qwen2VLForConditionalGeneration.from_pretrained)
+
+
+if __name__ == '__main__':
+    model = Qwen2Finetuned()
+    model.test_model()

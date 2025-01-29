@@ -6,6 +6,54 @@ MODE = 'pipeline'
 # MODE = 'inference'
 
 
+def select_model(model_name, model_type=None):
+    model = None
+    if model_name == 'mPLUGOwl2':
+        from models.mPLUGOwl2 import MPLUGOWL2
+        model = MPLUGOWL2()
+    elif model_name == 'mPLUGOwl3':
+        from models.mPLUGOwl3 import MPLUGOWL3
+        model = MPLUGOWL3()
+    elif model_name == 'blip2_t5_instruct':
+        from models.BLIP import BLIP
+        model = BLIP(model_name, model_type)
+    elif model_name == 'blip2_t5':
+        from models.BLIP import BLIP
+        model = BLIP(model_name, model_type)
+    elif model_name == 'blip2_opt':
+        from models.BLIP import BLIP
+        model = BLIP(model_name, model_type)
+    elif model_name == 'idefics2':
+        from models.Idefics2 import Idefics2
+        model = Idefics2()
+    elif model_name == 'llava':
+        from models.LLaVA import LLaVA
+        model = LLaVA()
+    elif model_name == 'llava_next_stronger':
+        from models.LLaVA_NEXT_Stronger import LLaVA_NEXT_Stronger
+        model = LLaVA_NEXT_Stronger()
+    elif model_name == 'mantis_siglip':
+        from models.MantisSiglip import MantisSiglip
+        model = MantisSiglip()
+    elif model_name == 'mantis_idefics2':
+        from models.MantisIdefics2 import MantisIdefics2
+        model = MantisIdefics2()
+    elif model_name == 'llava_ov':
+        from models.LLaVA_OV import LLaVA_OV
+        model = LLaVA_OV()
+    elif model_name == 'qwen2':
+        from models.Qwen import Qwen2
+        model = Qwen2()
+    elif model_name == 'qwen25':
+        from models.Qwen import Qwen25
+        model = Qwen25()
+    elif model_name == 'qwen2finetuned':
+        from models.Qwen import Qwen2Finetuned
+        model = Qwen2Finetuned()
+
+    return model
+
+
 def inference(task, dataset_path, output_name):
     dataset = json.load(open(dataset_path))
 
@@ -57,73 +105,7 @@ if __name__ == '__main__':
 
     print(args)
 
-    model = None
-
-    if args.model_name == 'mPLUGOwl2':
-        from models.mPLUGOwl2 import MPLUGOWL2
-
-        model = MPLUGOWL2()
-
-    elif args.model_name == 'mPLUGOwl3':
-        from models.mPLUGOwl3 import MPLUGOWL3
-
-        model = MPLUGOWL3()
-
-    elif args.model_name == 'blip2_t5_instruct':
-        from models.BLIP import BLIP
-
-        model = BLIP(args.model_name, args.model_type)
-
-    elif args.model_name == 'blip2_t5':
-        from models.BLIP import BLIP
-
-        model = BLIP(args.model_name, args.model_type)
-
-    elif args.model_name == 'blip2_opt':
-        from models.BLIP import BLIP
-
-        model = BLIP(args.model_name, args.model_type)
-
-    elif args.model_name == 'idefics2':
-        from models.Idefics2 import Idefics2
-
-        model = Idefics2()
-
-    elif args.model_name == 'llava':
-        from models.LLaVA import LLaVA
-
-        model = LLaVA()
-
-    elif args.model_name == 'llava_next_stronger':
-        from models.LLaVA_NEXT_Stronger import LLaVA_NEXT_Stronger
-
-        model = LLaVA_NEXT_Stronger()
-
-    elif args.model_name == 'mantis_siglip':
-        from models.MantisSiglip import MantisSiglip
-
-        model = MantisSiglip()
-
-    elif args.model_name == 'mantis_idefics2':
-        from models.MantisIdefics2 import MantisIdefics2
-
-        model = MantisIdefics2()
-
-    elif args.model_name == 'llava_ov':
-        from models.LLaVA_OV import LLaVA_OV
-
-        model = LLaVA_OV()
-
-    elif args.model_name == 'qwen2':
-        from models.Qwen import Qwen2
-
-        model = Qwen2()
-
-    elif args.model_name == 'qwen25':
-        from models.Qwen import Qwen25
-
-        model = Qwen25()
-
+    model = select_model(args.model_name, args.model_type)
     assert model is not None, 'Invalid model name'
 
     if MODE == 'pipeline':

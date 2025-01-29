@@ -35,6 +35,10 @@ case $1 in
     CONDA_ENV="qwen"
     MODEL_NAME="qwen2"
     ;;
+  8)
+    CONDA_ENV="qwen"
+    MODEL_NAME="qwen2finetuned"
+    ;;
 esac
 
 source activate $CONDA_ENV
