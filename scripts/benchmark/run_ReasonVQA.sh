@@ -454,8 +454,7 @@ esac
 
 # allow internet connection
 module load proxy4server-access
-proxy_on
-
+source /fs/applications/p4s-access/2.0/ActivateP4S.sh -a
 
 source activate $CONDA_ENV
 
