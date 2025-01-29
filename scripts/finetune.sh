@@ -6,10 +6,18 @@ DS_DIR="/fs/scratch/rb_bd_dlp_rng_dl01_cr_ICT_employees/trh7rng/dataset/${DS_VER
 
 source activate finetune
 
-# Step 1: Preparee the dataset
+# Step 1: Prepare the dataset
 #python -m finetune.prepare_dataset --ds_dir $DS_DIR
 
 # Step 2: Start finetuning
-cp llama-factory/reasonvqa.json LLaMA-Factory/data/reasonvqa.json
+#cp llama-factory/reasonvqa.json LLaMA-Factory/data/reasonvqa.json
+#cd LLaMA-Factory
+#WANDB_API_KEY=d2057d23808005ee64d642613fc1c20e971f6f71 llamafactory-cli train ../finetune/LF_finetune_qwen2-vl.yaml
+
+# Step 3: Merge LoRA
 cd LLaMA-Factory
-WANDB_API_KEY=d2057d23808005ee64d642613fc1c20e971f6f71 llamafactory-cli train ../finetune/llama-factory_qwen2-vl.yaml
+llamafactory-cli export ../finetune/LF_merge_qwen2-vl.yaml
+
+# Step 4: Inference
+#cd LLaMA-Factory
+#python scripts/vllm_infer.py --model_name_or_path models/qwen2_vl_lora_sft --dataset okvqa
