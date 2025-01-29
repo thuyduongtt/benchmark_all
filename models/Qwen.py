@@ -78,10 +78,6 @@ class Qwen(BenchmarkModel):
         if choices is not None:
             return f'{outputs} | {[c["symbol"] + ". " + c["choice"] for c in list_of_choices]}'
 
-        print('=====')
-        print(question)
-        print(outputs)
-
         return outputs
 
 
