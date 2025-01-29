@@ -185,9 +185,11 @@ def anaylysis_score_vqa(questions_df, limit=0, multichoice=False, output_file=No
         else:
             for s in METRICS:
                 try:
-                    val = ast.literal_eval(row[s])
-                except ValueError:
-                    print('ValueError:', row['id'], row['question'])
+                    if type(row[s]) == 'string':
+                        val = ast.literal_eval(row[s])
+                    val = row[s]
+                except ValueError as e:
+                    print('ValueError:', e, '| Question', row['question_id'], row['question'])
                 score[s] += val
 
     print('Total:', total, '| Score:', score, file=output_file)
@@ -337,12 +339,15 @@ def evaluate(result_root, result_dirs, ds_root, is_reasonvqa=True, agg='avg'):
     else:
         sizes = [0]
 
-    json_data = next(stream_data(f'{ds_root}/train.json', path=''))
-    all_questions = json_data['questions']
+    size_analysis = is_reasonvqa and len(sizes) > 0
 
-    n_hop = {}
-    for q in all_questions:
-        n_hop[q['question_id']] = q['n_hop']
+    if size_analysis:
+        json_data = next(stream_data(f'{ds_root}/train.json', path=''))
+        all_questions = json_data['questions']
+
+        n_hop = {}
+        for q in all_questions:
+            n_hop[q['question_id']] = q['n_hop']
 
     for i in range(len(sizes)):
         s = sizes[i]
@@ -367,17 +372,18 @@ def evaluate(result_root, result_dirs, ds_root, is_reasonvqa=True, agg='avg'):
                     continue
 
             questions_df = pd.concat(dfs, ignore_index=True)
-            questions_df['sort_order'] = questions_df['question_id'].map(n_hop)
-            questions_df = questions_df.sort_values('sort_order')
-
             f = open(f'{result_root}/{d["name"]}/score_{agg}_{s}.txt', 'w')
 
             print(f'There are {len(all_csv_files)} files in {score_dir}', file=f)
             print('=' * 50, f'Size: {s if s > 0 else "full"}', file=f)
 
-            if s > 0:
-                # questions_df = sample_questions(questions_df, s, n_categories[i], json_data['questions'])
-                questions_df = questions_df.iloc[:s]
+            if size_analysis:
+                questions_df['sort_order'] = questions_df['question_id'].map(n_hop)
+                questions_df = questions_df.sort_values('sort_order')
+
+                if s > 0:
+                    # questions_df = sample_questions(questions_df, s, n_categories[i], json_data['questions'])
+                    questions_df = questions_df.iloc[:s]
 
             extract_fn = None if 'extract_fn' not in d else d['extract_fn']
             if d['reasonvqa']:
@@ -421,9 +427,13 @@ def evaluate(result_root, result_dirs, ds_root, is_reasonvqa=True, agg='avg'):
 
 
 if __name__ == '__main__':
-    DS_NAME = 'ReasonVQA'
-    DS_ROOT = '/mnt/WORK/Code/Masters/ds/ReasonVQA_subset/unbalanced'
-    RESULT_ROOT = '/mnt/WORK/Code/Masters/VQAModels/benchmark_all/results/' + DS_NAME
+    DS_NAME = 'OKVQA'
+    RESULT_ROOT = '/mnt/e/Code/Masters/benchmark_all/results/' + DS_NAME
+    DS_ROOT = {
+        'ReasonVQA': '/mnt/e/Code/Masters/ds/ReasonVQA_subset/unbalanced',
+        'OKVQA': '/mnt/e/Code/Datasets/OKVQA'
+    }
+
     DIRS = [
         # {'name': 'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
         # {'name': 'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
@@ -432,7 +442,7 @@ if __name__ == '__main__':
         # {'name': 'output_mantis_siglip__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
         # {'name': 'output_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
         # {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        {'name': 'output_llava_ov__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        # {'name': 'output_llava_ov__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
 
         # {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
         # {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
@@ -442,10 +452,13 @@ if __name__ == '__main__':
         # {'name': 'output_mc_mantis_siglip__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
         # {'name': 'output_mc_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
         # {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        # {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
 
         # {'name': 'output_llava_ov__OKVQA', 'multichoice': False, 'reasonvqa': False},
         # {'name': 'output_llava_ov__VQAv2', 'multichoice': False, 'reasonvqa': False},
+
+        {'name': 'output_qwen2__OKVQA', 'multichoice': False, 'reasonvqa': False},
+        {'name': 'output_qwen2finetuned__OKVQA', 'multichoice': False, 'reasonvqa': False},
 
         # {'name': 'output_mc_idefics2__OKVQA', 'multichoice': True, 'reasonvqa': False,
         #  'extract_fn': extract_answer_idefics2},
@@ -460,4 +473,4 @@ if __name__ == '__main__':
 
     # for a in ['avg', 'std', 'sem']:
     for a in ['avg']:
-        evaluate(RESULT_ROOT, DIRS, DS_ROOT, is_reasonvqa=DS_NAME == 'ReasonVQA', agg=a)
+        evaluate(RESULT_ROOT, DIRS, DS_ROOT[DS_NAME], is_reasonvqa=(DS_NAME == 'ReasonVQA'), agg=a)

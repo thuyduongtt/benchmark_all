@@ -31,9 +31,9 @@ def load_unbalanced_data():
             for k in CSV_FIELDS:
                 values.append(row[k])
 
-            if row['id'] not in UNBALANCED_DATA:
-                UNBALANCED_DATA[row['id']] = []
-            UNBALANCED_DATA[row['id']].append({
+            if row['question_id'] not in UNBALANCED_DATA:
+                UNBALANCED_DATA[row['question_id']] = []
+            UNBALANCED_DATA[row['question_id']].append({
                 'question': row['question'],
                 # 'prediction': row['prediction'],
                 'row_data': values
