@@ -400,6 +400,55 @@ case $1 in
       START=60000
       MULTICHOICE=false
       ;;
+  # ======================================== GPT
+    65)
+      CONDA_ENV="openai"
+      MODEL_NAME="gpt"
+      START=0
+      MULTICHOICE=true
+      ;;
+    66)
+      CONDA_ENV="openai"
+      MODEL_NAME="gpt"
+      START=20000
+      MULTICHOICE=true
+      ;;
+    67)
+      CONDA_ENV="openai"
+      MODEL_NAME="gpt"
+      START=40000
+      MULTICHOICE=true
+      ;;
+    68)
+      CONDA_ENV="openai"
+      MODEL_NAME="gpt"
+      START=60000
+      MULTICHOICE=true
+      ;;
+    69)
+      CONDA_ENV="openai"
+      MODEL_NAME="gpt"
+      START=0
+      MULTICHOICE=false
+      ;;
+    70)
+      CONDA_ENV="openai"
+      MODEL_NAME="gpt"
+      START=20000
+      MULTICHOICE=false
+      ;;
+    71)
+      CONDA_ENV="openai"
+      MODEL_NAME="gpt"
+      START=40000
+      MULTICHOICE=false
+      ;;
+    72)
+      CONDA_ENV="openai"
+      MODEL_NAME="gpt"
+      START=60000
+      MULTICHOICE=false
+      ;;
 
 esac
 

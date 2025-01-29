@@ -41,7 +41,7 @@ class LLaVA_OV(BenchmarkModel):
 
         list_of_choices = []
         if choices is None:
-            question = row_data['question']
+            question = row_data['question'] + ' Output the answer only.'
         else:
             question, list_of_choices = self.build_mc_prompt(row_data['question'], choices)
 

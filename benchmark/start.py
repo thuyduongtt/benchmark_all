@@ -49,6 +49,9 @@ def select_model(model_name, model_type=None):
     elif model_name == 'qwen2finetuned':
         from models.Qwen import Qwen2Finetuned
         return Qwen2Finetuned()
+    elif model_name == 'gpt':
+        from models.GPT import GPT
+        return GPT()
 
     return None
 
