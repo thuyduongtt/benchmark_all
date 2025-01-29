@@ -17,7 +17,3 @@ source activate finetune
 # Step 3: Merge LoRA
 cd LLaMA-Factory
 llamafactory-cli export ../finetune/LF_merge_qwen2-vl.yaml
-
-# Step 4: Inference
-#cd LLaMA-Factory
-#python scripts/vllm_infer.py --model_name_or_path models/qwen2_vl_lora_sft --dataset okvqa

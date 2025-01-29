@@ -7,51 +7,50 @@ MODE = 'pipeline'
 
 
 def select_model(model_name, model_type=None):
-    model = None
     if model_name == 'mPLUGOwl2':
         from models.mPLUGOwl2 import MPLUGOWL2
-        model = MPLUGOWL2()
+        return MPLUGOWL2()
     elif model_name == 'mPLUGOwl3':
         from models.mPLUGOwl3 import MPLUGOWL3
-        model = MPLUGOWL3()
+        return MPLUGOWL3()
     elif model_name == 'blip2_t5_instruct':
         from models.BLIP import BLIP
-        model = BLIP(model_name, model_type)
+        return BLIP(model_name, model_type)
     elif model_name == 'blip2_t5':
         from models.BLIP import BLIP
-        model = BLIP(model_name, model_type)
+        return BLIP(model_name, model_type)
     elif model_name == 'blip2_opt':
         from models.BLIP import BLIP
-        model = BLIP(model_name, model_type)
+        return BLIP(model_name, model_type)
     elif model_name == 'idefics2':
         from models.Idefics2 import Idefics2
-        model = Idefics2()
+        return Idefics2()
     elif model_name == 'llava':
         from models.LLaVA import LLaVA
-        model = LLaVA()
+        return LLaVA()
     elif model_name == 'llava_next_stronger':
         from models.LLaVA_NEXT_Stronger import LLaVA_NEXT_Stronger
-        model = LLaVA_NEXT_Stronger()
+        return LLaVA_NEXT_Stronger()
     elif model_name == 'mantis_siglip':
         from models.MantisSiglip import MantisSiglip
-        model = MantisSiglip()
+        return MantisSiglip()
     elif model_name == 'mantis_idefics2':
         from models.MantisIdefics2 import MantisIdefics2
-        model = MantisIdefics2()
+        return MantisIdefics2()
     elif model_name == 'llava_ov':
         from models.LLaVA_OV import LLaVA_OV
-        model = LLaVA_OV()
+        return LLaVA_OV()
     elif model_name == 'qwen2':
         from models.Qwen import Qwen2
-        model = Qwen2()
+        return Qwen2()
     elif model_name == 'qwen25':
         from models.Qwen import Qwen25
-        model = Qwen25()
+        return Qwen25()
     elif model_name == 'qwen2finetuned':
         from models.Qwen import Qwen2Finetuned
-        model = Qwen2Finetuned()
+        return Qwen2Finetuned()
 
-    return model
+    return None
 
 
 def inference(task, dataset_path, output_name):
