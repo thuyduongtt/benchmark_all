@@ -452,6 +452,10 @@ case $1 in
 
 esac
 
+# allow internet connection
+module load proxy4server-access
+proxy_on
+
 
 source activate $CONDA_ENV
 
