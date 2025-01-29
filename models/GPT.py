@@ -12,7 +12,7 @@ class GPT(BenchmarkModel):
     def load_model(self):
         # do not forget to set the environment variables for AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT
         self.client = AzureOpenAI(
-            api_version="2023-07-01-preview"
+            api_version="2024-11-20"
         )
 
     def run_vqa_task(self, image, row_data, choices=None, image_url=None):
