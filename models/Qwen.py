@@ -34,7 +34,7 @@ class Qwen(BenchmarkModel):
 
         list_of_choices = []
         if choices is None:
-            question = row_data['question']
+            question = row_data['question'] + ' Output the answer only.'
         else:
             question, list_of_choices = self.build_mc_prompt(row_data['question'], choices)
 
@@ -48,7 +48,7 @@ class Qwen(BenchmarkModel):
                         "type": "image",
                         "image": image,
                     },
-                    {"type": "text", "text": question + ' Output the answer only.'},
+                    {"type": "text", "text": question},
                 ],
             }
         ]
