@@ -150,7 +150,7 @@ def anaylysis_score_reasonvqa(questions_df, limit=0, multichoice=False, output_f
     return evaluation
 
 
-def anaylysis_score_vqa(questions_df, limit=0, multichoice=False, output_file=None, extract_answer_fn=None):
+def anaylysis_score_vqa(questions_df, limit=0, multichoice=False, output_file=None, extract_answer_fn=None, agg='avg'):
     total = 0
     score = ScoreList()
 
@@ -180,19 +180,17 @@ def anaylysis_score_vqa(questions_df, limit=0, multichoice=False, output_file=No
             if s is None:
                 print(pred)
                 n_error += 1
-            score.exact_match += s
+            score.exact_match.append(s)
 
         else:
             for s in METRICS:
-                try:
-                    if type(row[s]) == 'string':
-                        val = ast.literal_eval(row[s])
+                if type(row[s]) == 'string':
+                    val = ast.literal_eval(row[s])
+                else:
                     val = row[s]
-                except ValueError as e:
-                    print('ValueError:', e, '| Question', row['question_id'], row['question'])
-                score[s] += val
+                score[s].append(val)
 
-    print('Total:', total, '| Score:', score, file=output_file)
+    print('Score:', score, file=output_file)
 
     evaluation = {}
 
@@ -200,10 +198,12 @@ def anaylysis_score_vqa(questions_df, limit=0, multichoice=False, output_file=No
         if multichoice and s != 'exact_match':
             continue
         evaluation[s] = {
-            'acc': get_ratio(score[s], total) * 100
+            'acc': compute_aggregate(agg, score[s])
         }
 
-    for s in evaluation:
+    for s in METRICS:
+        if s not in evaluation:
+            continue
         print('=====', s, file=output_file)
         print('Acc:', f"{evaluation[s]['acc']:.1f}", file=output_file)
 
@@ -332,14 +332,11 @@ def count_categories(questions_df, all_questions):
     return len(list(category_dist.keys()))
 
 
-def evaluate(result_root, result_dirs, ds_root, is_reasonvqa=True, agg='avg'):
-    if is_reasonvqa:
-        # sizes = [5000, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 0]
-        sizes = [0]
+def evaluate(result_root, result_dirs, ds_root, agg='avg', size_analysis=False):
+    if size_analysis:
+        sizes = [5000, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 0]
     else:
         sizes = [0]
-
-    size_analysis = is_reasonvqa and len(sizes) > 0
 
     if size_analysis:
         json_data = next(stream_data(f'{ds_root}/train.json', path=''))
@@ -417,7 +414,7 @@ def evaluate(result_root, result_dirs, ds_root, is_reasonvqa=True, agg='avg'):
 
             f.close()
 
-            if is_reasonvqa:
+            if size_analysis:
                 for m in evaluations:
                     print('=' * 50, m.upper(), '| DATASET SIZE:', s)
                     df = pd.DataFrame(evaluations[m])
@@ -442,7 +439,8 @@ if __name__ == '__main__':
         # {'name': 'output_mantis_siglip__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
         # {'name': 'output_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
         # {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        # {'name': 'output_llava_ov__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
+        # {'name': 'output_llava_ov__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
+        # {'name': 'output_qwen25__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
 
         # {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
         # {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
@@ -452,13 +450,14 @@ if __name__ == '__main__':
         # {'name': 'output_mc_mantis_siglip__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
         # {'name': 'output_mc_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
         # {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        # {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
+        # {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},  # <====== NEW
 
-        # {'name': 'output_llava_ov__OKVQA', 'multichoice': False, 'reasonvqa': False},
-        # {'name': 'output_llava_ov__VQAv2', 'multichoice': False, 'reasonvqa': False},
+        {'name': 'output_llava_ov__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
+        # {'name': 'output_llava_ov__VQAv2', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
 
-        {'name': 'output_qwen2__OKVQA', 'multichoice': False, 'reasonvqa': False},
-        {'name': 'output_qwen2finetuned__OKVQA', 'multichoice': False, 'reasonvqa': False},
+        # {'name': 'output_qwen2__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
+        # {'name': 'output_qwen2finetuned__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
+        # {'name': 'output_qwen25__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
 
         # {'name': 'output_mc_idefics2__OKVQA', 'multichoice': True, 'reasonvqa': False,
         #  'extract_fn': extract_answer_idefics2},
@@ -473,4 +472,4 @@ if __name__ == '__main__':
 
     # for a in ['avg', 'std', 'sem']:
     for a in ['avg']:
-        evaluate(RESULT_ROOT, DIRS, DS_ROOT[DS_NAME], is_reasonvqa=(DS_NAME == 'ReasonVQA'), agg=a)
+        evaluate(RESULT_ROOT, DIRS, DS_ROOT[DS_NAME], agg=a)

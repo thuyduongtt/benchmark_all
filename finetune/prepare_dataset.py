@@ -1,5 +1,4 @@
 import ijson
-# from datasets import Dataset, Image
 import argparse
 import json
 from pathlib import Path

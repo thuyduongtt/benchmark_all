@@ -159,11 +159,13 @@ def compute_score(list_of_csv, output_dir, limit=0, extract_answer_fn=None):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--result_dir', type=str, required=True)
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('--result_dir', type=str, required=True)
+    # args = parser.parse_args()
+
+    result_dir = '../results/ReasonVQA/output_qwen25__ReasonVQA_unbalanced'
 
     all_csv_files = []
-    get_all_csv(args.result_dir, all_csv_files)
+    get_all_csv(result_dir, all_csv_files)
 
-    compute_score(all_csv_files, f'{args.result_dir}/score', extract_answer_fn=extract_answer_idefics2)
+    compute_score(all_csv_files, f'{result_dir}/score')
