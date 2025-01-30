@@ -28,7 +28,7 @@ class Qwen(BenchmarkModel):
     def load_model(self):
         pass
 
-    def run_vqa_task(self, image, row_data, choices=None):
+    def run_vqa_task(self, image, row_data, choices=None, image_url=None):
         if self.model is None:
             self.load_model()
 

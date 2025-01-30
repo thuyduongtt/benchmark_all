@@ -5,7 +5,7 @@ class BenchmarkModel:
     def __init__(self, model_name=None, model_type=None):
         pass
 
-    def run_vqa_task(self, image, row_data, choices=None):
+    def run_vqa_task(self, image, row_data, choices=None, image_url=None):
         pass
 
     def build_mc_prompt(self, question, choices):
