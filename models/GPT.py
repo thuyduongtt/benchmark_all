@@ -1,4 +1,4 @@
-from openai import AzureOpenAI
+from openai import AzureOpenAI, BadRequestError
 
 from models.BenchmarkModel import BenchmarkModel
 import base64
@@ -51,10 +51,11 @@ class GPT(BenchmarkModel):
                 ],
             )    
             outputs = completion.choices[0].message.content
-        except openai.BadRequestError as e:
+
+        except BadRequestError as e:
             print('Error happened:', row_data['question_id'], question)
             print(e)
-            return None
+            outputs = 'None'
 
         if choices is not None:
             return f'{outputs} | {[c["symbol"] + ". " + c["choice"] for c in list_of_choices]}'

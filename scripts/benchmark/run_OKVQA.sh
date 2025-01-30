@@ -43,6 +43,10 @@ case $1 in
     CONDA_ENV="qwen"
     MODEL_NAME="qwen2finetuned"
     ;;
+  10)
+    CONDA_ENV="openai"
+    MODEL_NAME="gpt"
+    ;;
 esac
 
 source activate $CONDA_ENV
