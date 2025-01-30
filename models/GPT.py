@@ -34,23 +34,27 @@ class GPT(BenchmarkModel):
                 img_url = f"data:image/jpeg;base64,{encoded_string}"
                 print('Load image from local and convert to base64')
 
-        completion = self.client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": question},
-                        {
-                            "type": "image_url",
-                            "image_url": {"url": img_url}
-                        },
-                    ]
-                },
-            ],
-        )
-
-        outputs = completion.choices[0].message.content
+        try:
+            completion = self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": question},
+                            {
+                                "type": "image_url",
+                                "image_url": {"url": img_url}
+                            },
+                        ]
+                    },
+                ],
+            )    
+            outputs = completion.choices[0].message.content
+        except openai.BadRequestError as e:
+            print('Error happened:', row_data['question_id'], question)
+            print(e)
+            return None
 
         if choices is not None:
             return f'{outputs} | {[c["symbol"] + ". " + c["choice"] for c in list_of_choices]}'
