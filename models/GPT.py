@@ -26,7 +26,7 @@ class GPT(BenchmarkModel):
             question, list_of_choices = self.build_mc_prompt(row_data['question'], choices)
 
         if image_url is not None:
-            img_url = f"https://storage.googleapis.com/vqademo/explore/img/{image_url}"
+            img_url = image_url
             # print('Load image from URL:', img_url)
         else:
             with open(image, "rb") as image_file:

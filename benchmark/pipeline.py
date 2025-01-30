@@ -96,7 +96,7 @@ def stream_data_reasonvqa(ds_dir, ds_split, limit=0, start_at=0):
                 'n_hop': record['n_hop'],
                 'has_scene_graph': record['has_scene_graph'],
                 'image_path': f"{ds_split}/{record['image_id']}.jpg",
-                'image_url': f"{record['dataset_name']}/{record['image_dir']}/{record['image_name']}"
+                'image_url': f"https://storage.googleapis.com/vqademo/explore/img/{record['dataset_name']}/{record['image_dir']}/{record['image_name']}"
             }
 
 
@@ -148,6 +148,8 @@ def stream_data_vqa(ds_dir, limit=0, start_at=0, okvqa=False):
             choices += select_choices(all_answers, answers)
             choice_scores = [1] * len(answers) + [0] * (len(choices) - len(answers))
 
+            image_name = f"COCO_val2014_{str(record['image_id']).zfill(12)}.jpg"  # COCO_val2014_000000297147.jpg
+
             yield {
                 'question_id': record['question_id'],
                 'image_id': record['image_id'],
@@ -155,8 +157,8 @@ def stream_data_vqa(ds_dir, limit=0, start_at=0, okvqa=False):
                 'answers': answers,
                 'choices': choices,
                 'choice_scores': choice_scores,
-                'image_path': f"COCO_val2014_{str(record['image_id']).zfill(12)}.jpg",  # COCO_val2014_000000297147.jpg
-                'image_url': None
+                'image_path': image_name,
+                'image_url': f"https://s3-us-west-2.amazonaws.com/ai2-vision/aishwarya/mscoco_images/val2014/{image_name}"
             }
 
 
