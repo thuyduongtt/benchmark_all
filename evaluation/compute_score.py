@@ -163,7 +163,7 @@ if __name__ == '__main__':
     # parser.add_argument('--result_dir', type=str, required=True)
     # args = parser.parse_args()
 
-    result_dir = '../results/ReasonVQA/output_qwen25__ReasonVQA_unbalanced'
+    result_dir = '../results/VQAv2/output_llava_ov__VQAv2'
 
     all_csv_files = []
     get_all_csv(result_dir, all_csv_files)

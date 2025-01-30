@@ -450,6 +450,64 @@ case $1 in
       MULTICHOICE=false
       ;;
 
+    73)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen2"
+      START=0
+      LIMIT=5000
+      MULTICHOICE=false
+      ;;
+    74)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen2"
+      START=5000
+      LIMIT=5000
+      MULTICHOICE=false
+      ;;
+    75)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen2"
+      START=10000
+      LIMIT=5000
+      MULTICHOICE=false
+      ;;
+    76)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen2"
+      START=15000
+      LIMIT=10000
+      MULTICHOICE=false
+      ;;
+
+    77)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen2finetuned"
+      START=0
+      LIMIT=5000
+      MULTICHOICE=false
+      ;;
+    78)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen2finetuned"
+      START=5000
+      LIMIT=5000
+      MULTICHOICE=false
+      ;;
+    79)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen2finetuned"
+      START=10000
+      LIMIT=5000
+      MULTICHOICE=false
+      ;;
+    80)
+      CONDA_ENV="qwen"
+      MODEL_NAME="qwen2finetuned"
+      START=15000
+      LIMIT=10000
+      MULTICHOICE=false
+      ;;
+
 esac
 
 # allow internet connection
