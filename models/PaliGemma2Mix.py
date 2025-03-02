@@ -37,8 +37,9 @@ class PaliGemma2Mix(BenchmarkModel):
             question, list_of_choices = self.build_mc_prompt(row_data['question'], choices)
 
         # print(question)
+        prompt = '<image> ' + question
 
-        inputs = self.processor(text=question, images=image, return_tensors="pt").to(torch.bfloat16).to(
+        inputs = self.processor(text=prompt, images=image, return_tensors="pt").to(torch.bfloat16).to(
             self.model.device)
         input_len = inputs["input_ids"].shape[-1]
 
