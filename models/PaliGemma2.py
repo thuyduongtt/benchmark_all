@@ -18,7 +18,8 @@ class PaliGemma2(BenchmarkModel):
         self.access_token = os.environ.get('HF_ACCESS_TOKEN')
 
     def load_model(self):
-        model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH, token=self.access_token)
+        model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH, token=self.access_token,
+                                                                  attn_implementation="flash_attention_2")
         model = model.to(device)
         image_processor = PaliGemmaProcessor.from_pretrained(self.MODEL_PATH, token=self.access_token)
         self.model = model

@@ -16,7 +16,7 @@ class MantisSiglip(BenchmarkModel):
 
     def load_model(self):
         self.processor = MLlavaProcessor.from_pretrained(self.MODEL_PATH)
-        attn_implementation = None  # or "flash_attention_2"
+        attn_implementation = "flash_attention_2"  # or None
         self.model = LlavaForConditionalGeneration.from_pretrained(self.MODEL_PATH, device_map='auto',
                                                             torch_dtype=torch.bfloat16,
                                                             attn_implementation=attn_implementation)
