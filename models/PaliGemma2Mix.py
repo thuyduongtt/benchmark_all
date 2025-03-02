@@ -2,6 +2,7 @@ import requests
 import torch
 from PIL import Image
 from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration
+import os
 
 from models.BenchmarkModel import BenchmarkModel
 
@@ -14,10 +15,12 @@ class PaliGemma2Mix(BenchmarkModel):
         self.MODEL_PATH = 'google/paligemma2-28b-mix-448'
         self.model = None
         self.processor = None
+        self.access_token = os.environ.get('HF_ACCESS_TOKEN')
 
     def load_model(self):
-        model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH, torch_dtype=torch.bfloat16, device_map="auto").eval()
-        image_processor = PaliGemmaProcessor.from_pretrained(self.MODEL_PATH)
+        model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH, torch_dtype=torch.bfloat16,
+                                                                  device_map="auto", token=self.access_token).eval()
+        image_processor = PaliGemmaProcessor.from_pretrained(self.MODEL_PATH, token=self.access_token)
         self.model = model
         self.processor = image_processor
 
@@ -35,7 +38,8 @@ class PaliGemma2Mix(BenchmarkModel):
 
         # print(question)
 
-        inputs = self.processor(text=question, images=image, return_tensors="pt").to(torch.bfloat16).to(self.model.device)
+        inputs = self.processor(text=question, images=image, return_tensors="pt").to(torch.bfloat16).to(
+            self.model.device)
         input_len = inputs["input_ids"].shape[-1]
 
         with torch.inference_mode():

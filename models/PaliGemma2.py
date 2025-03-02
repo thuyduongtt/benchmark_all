@@ -2,6 +2,7 @@ import requests
 import torch
 from PIL import Image
 from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration
+import os
 
 from models.BenchmarkModel import BenchmarkModel
 
@@ -14,11 +15,12 @@ class PaliGemma2(BenchmarkModel):
         self.MODEL_PATH = 'google/paligemma2-28b-pt-448'
         self.model = None
         self.processor = None
+        self.access_token = os.environ.get('HF_ACCESS_TOKEN')
 
     def load_model(self):
-        model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH)
+        model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH, token=self.access_token)
         model = model.to(device)
-        image_processor = PaliGemmaProcessor.from_pretrained(self.MODEL_PATH)
+        image_processor = PaliGemmaProcessor.from_pretrained(self.MODEL_PATH, token=self.access_token)
         self.model = model
         self.processor = image_processor
 
