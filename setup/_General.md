@@ -11,6 +11,10 @@ https://github.com/X-PLUG/mPLUG-Owl/tree/main/mPLUG-Owl3
 # PaliGemma 2
 https://huggingface.co/blog/paligemma2
 https://huggingface.co/blog/paligemma2mix
+Generate HuggingFace token:
+- Go to https://huggingface.co/settings/tokens
+- Create a new token with type READ
+- Set the environment variable HF_ACCESS_TOKEN to this token
 
 
 # These models share the same dependencies

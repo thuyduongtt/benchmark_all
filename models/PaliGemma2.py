@@ -12,7 +12,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 class PaliGemma2(BenchmarkModel):
     def __init__(self):
         super().__init__()
-        self.MODEL_PATH = 'google/paligemma2-28b-pt-448'
+        self.MODEL_PATH = 'google/paligemma2-10b-pt-448'
         self.model = None
         self.processor = None
         self.access_token = os.environ.get('HF_ACCESS_TOKEN')
