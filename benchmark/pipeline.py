@@ -54,6 +54,10 @@ def run_pipeline_by_question(task, ds_name, ds_dir, img_dir, output_dir_name, li
 
         answers = d['answers']
 
+        # print a first few lines for model checking
+        if i <= 5:
+            print(d['question_id'], d['question'], answers, prediction)
+
         if ds_name == 'ReasonVQA':
             csv_writer.writerow([d['question_id'], d['image_id'], img_path, d['question'], answers,
                                  prediction, d['n_hop'], d['has_scene_graph'], split])

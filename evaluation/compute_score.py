@@ -133,6 +133,10 @@ def compute_score(list_of_csv, output_dir, limit=0, extract_answer_fn=None):
             if len(answer) == 0:
                 continue
 
+            if str(row['prediction']) == 'None':
+                print('Uh oh:', csv_file, row['question_id'])
+                continue
+
             prediction_str = str(row['prediction']).lower()
             if prediction_str.startswith('['):
                 prediction_str = ast.literal_eval(prediction_str)[0]
@@ -163,7 +167,7 @@ if __name__ == '__main__':
     # parser.add_argument('--result_dir', type=str, required=True)
     # args = parser.parse_args()
 
-    result_dir = '../results/VQAv2/output_llava_ov__VQAv2'
+    result_dir = '../results/VQAv2/output_qwen25__VQAv2'
 
     all_csv_files = []
     get_all_csv(result_dir, all_csv_files)

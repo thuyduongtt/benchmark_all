@@ -1,520 +1,76 @@
 #!/bin/bash
 
+# Ensure input is a valid number
+if [[ ! "$1" =~ ^[0-9]+$ ]] || [[ "$1" -lt 1 ]]; then
+  echo "Usage: $0 <positive integer>"
+  exit 1
+fi
+
+# List of models and conda env
+# the model is selected by argument $1
+# for each model, first half is multi-choice, the second half is open-ended
+MODELS=(
+"mPLUGOwl3 owl3"  # 1-4, 5-8
+"idefics2 owl3"  # 9-12, 13-16
+"llava llava"  # 17-20, 21-24
+"llava_next_stronger llava_next"  # 25-28, 29-32
+"mantis_siglip mantis_siglip"  # 33-36, 37-40
+"mantis_idefics2 owl3"  # 41-44, 45-48
+"llava_ov llava_ov"  # 49-52, 53-56
+"qwen25 qwen"  # 57-60, 61-64
+"gpt openai"  # 65-68, 69-72
+"qwen2 qwen"  # 73-76, 77-80
+"qwen2finetuned qwen"  # 81-84, 85-88
+"paligemma2 paligemma"  # 89-92, 93-96
+"paligemma2mix paligemma"  # 97-100, 101-104
+)
+
+# Define models that should be benchmarked on val set only
+VAL_MODELS=("qwen2" "qwen2finetuned")
+
 LIMIT=20000
+N_PART=4  # divide the dataset into parts, each contains $LIMIT samples
+N_PART_SCENARIO=$(( $N_PART * 2 ))  # two scenarios: multi-choice & open-ended
+
+# Calculate which model to use
+MODEL_INDEX=$(( ($1 - 1) / $N_PART_SCENARIO ))  # Each model has 8 cases
+MODEL_ENTRY=(${MODELS[$MODEL_INDEX]})  # Split the string into an array
+MODEL_NAME="${MODEL_ENTRY[0]}"
+CONDA_ENV="${MODEL_ENTRY[1]}"
+
+for SPECIAL_MODEL in "${VAL_MODELS[@]}"; do
+  if [[ "$MODEL_NAME" == "$SPECIAL_MODEL" ]]; then
+    LIMIT=5000
+    break
+  fi
+done
+
+# Calculate START
+START=$(( ($1 - 1) % $N_PART * $LIMIT ))
+
+# Determine MULTICHOICE value
+if (( ($1 - 1) % $N_PART_SCENARIO < $N_PART )); then
+  MULTICHOICE=true
+else
+  MULTICHOICE=false
+fi
+
+echo "MODEL_NAME=$MODEL_NAME"
+echo "CONDA_ENV=$CONDA_ENV"
+echo "START=$START"
+echo "MULTICHOICE=$MULTICHOICE"
+echo "LIMIT=$LIMIT"
+
+# exit 0
+
+source activate $CONDA_ENV
+
+
 DS_NAME="ReasonVQA"
 DS_VERSION="unbalanced"
 
 DS_DIR="../dataset/${DS_VERSION}"
 MODEL_TYPE=""
-
-case $1 in
-# ======================================== mPLUGOwl3
-  1)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mPLUGOwl3"
-    START=0
-    MULTICHOICE=true
-    ;;
-  2)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mPLUGOwl3"
-    START=20000
-    MULTICHOICE=true
-    ;;
-  3)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mPLUGOwl3"
-    START=40000
-    MULTICHOICE=true
-    ;;
-  4)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mPLUGOwl3"
-    START=60000
-    MULTICHOICE=true
-    ;;
-  5)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mPLUGOwl3"
-    START=0
-    MULTICHOICE=false
-    ;;
-  6)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mPLUGOwl3"
-    START=20000
-    MULTICHOICE=false
-    ;;
-  7)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mPLUGOwl3"
-    START=40000
-    MULTICHOICE=false
-    ;;
-  8)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mPLUGOwl3"
-    START=60000
-    MULTICHOICE=false
-    ;;
-# ======================================== Idefics2
-  9)
-    CONDA_ENV="owl3"
-    MODEL_NAME="idefics2"
-    START=0
-    MULTICHOICE=true
-    ;;
-  10)
-    CONDA_ENV="owl3"
-    MODEL_NAME="idefics2"
-    START=20000
-    MULTICHOICE=true
-    ;;
-  11)
-    CONDA_ENV="owl3"
-    MODEL_NAME="idefics2"
-    START=40000
-    MULTICHOICE=true
-    ;;
-  12)
-    CONDA_ENV="owl3"
-    MODEL_NAME="idefics2"
-    START=60000
-    MULTICHOICE=true
-    ;;
-  13)
-    CONDA_ENV="owl3"
-    MODEL_NAME="idefics2"
-    START=0
-    MULTICHOICE=false
-    ;;
-  14)
-    CONDA_ENV="owl3"
-    MODEL_NAME="idefics2"
-    START=20000
-    MULTICHOICE=false
-    ;;
-  15)
-    CONDA_ENV="owl3"
-    MODEL_NAME="idefics2"
-    START=40000
-    MULTICHOICE=false
-    ;;
-  16)
-    CONDA_ENV="owl3"
-    MODEL_NAME="idefics2"
-    START=60000
-    MULTICHOICE=false
-    ;;
-# ======================================== LLaVA
-  17)
-    CONDA_ENV="llava"
-    MODEL_NAME="llava"
-    START=0
-    MULTICHOICE=true
-    ;;
-  18)
-    CONDA_ENV="llava"
-    MODEL_NAME="llava"
-    START=20000
-    MULTICHOICE=true
-    ;;
-  19)
-    CONDA_ENV="llava"
-    MODEL_NAME="llava"
-    START=40000
-    MULTICHOICE=true
-    ;;
-  20)
-    CONDA_ENV="llava"
-    MODEL_NAME="llava"
-    START=60000
-    MULTICHOICE=true
-    ;;
-  21)
-    CONDA_ENV="llava"
-    MODEL_NAME="llava"
-    START=0
-    MULTICHOICE=false
-    ;;
-  22)
-    CONDA_ENV="llava"
-    MODEL_NAME="llava"
-    START=20000
-    MULTICHOICE=false
-    ;;
-  23)
-    CONDA_ENV="llava"
-    MODEL_NAME="llava"
-    START=40000
-    MULTICHOICE=false
-    ;;
-  24)
-    CONDA_ENV="llava"
-    MODEL_NAME="llava"
-    START=60000
-    MULTICHOICE=false
-    ;;
-# ======================================== LLaVA-NEXT
-  25)
-    CONDA_ENV="llava_next"
-    MODEL_NAME="llava_next_stronger"
-    START=0
-    MULTICHOICE=true
-    ;;
-  26)
-    CONDA_ENV="llava_next"
-    MODEL_NAME="llava_next_stronger"
-    START=20000
-    MULTICHOICE=true
-    ;;
-  27)
-    CONDA_ENV="llava_next"
-    MODEL_NAME="llava_next_stronger"
-    START=40000
-    MULTICHOICE=true
-    ;;
-  28)
-    CONDA_ENV="llava_next"
-    MODEL_NAME="llava_next_stronger"
-    START=60000
-    MULTICHOICE=true
-    ;;
-  29)
-    CONDA_ENV="llava_next"
-    MODEL_NAME="llava_next_stronger"
-    START=0
-    MULTICHOICE=false
-    ;;
-  30)
-    CONDA_ENV="llava_next"
-    MODEL_NAME="llava_next_stronger"
-    START=20000
-    MULTICHOICE=false
-    ;;
-  31)
-    CONDA_ENV="llava_next"
-    MODEL_NAME="llava_next_stronger"
-    START=40000
-    MULTICHOICE=false
-    ;;
-  32)
-    CONDA_ENV="llava_next"
-    MODEL_NAME="llava_next_stronger"
-    START=60000
-    MULTICHOICE=false
-    ;;
-# ======================================== Mantis-SIGLIP
-  33)
-    CONDA_ENV="mantis_siglip"
-    MODEL_NAME="mantis_siglip"
-    START=0
-    MULTICHOICE=true
-    ;;
-  34)
-    CONDA_ENV="mantis_siglip"
-    MODEL_NAME="mantis_siglip"
-    START=20000
-    MULTICHOICE=true
-    ;;
-  35)
-    CONDA_ENV="mantis_siglip"
-    MODEL_NAME="mantis_siglip"
-    START=40000
-    MULTICHOICE=true
-    ;;
-  36)
-    CONDA_ENV="mantis_siglip"
-    MODEL_NAME="mantis_siglip"
-    START=60000
-    MULTICHOICE=true
-    ;;
-  37)
-    CONDA_ENV="mantis_siglip"
-    MODEL_NAME="mantis_siglip"
-    START=0
-    MULTICHOICE=false
-    ;;
-  38)
-    CONDA_ENV="mantis_siglip"
-    MODEL_NAME="mantis_siglip"
-    START=20000
-    MULTICHOICE=false
-    ;;
-  39)
-    CONDA_ENV="mantis_siglip"
-    MODEL_NAME="mantis_siglip"
-    START=40000
-    MULTICHOICE=false
-    ;;
-  40)
-    CONDA_ENV="mantis_siglip"
-    MODEL_NAME="mantis_siglip"
-    START=60000
-    MULTICHOICE=false
-    ;;
-# ======================================== Mantis-Idefics2
-  41)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mantis_idefics2"
-    START=0
-    MULTICHOICE=true
-    ;;
-  42)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mantis_idefics2"
-    START=20000
-    MULTICHOICE=true
-    ;;
-  43)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mantis_idefics2"
-    START=40000
-    MULTICHOICE=true
-    ;;
-  44)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mantis_idefics2"
-    START=60000
-    MULTICHOICE=true
-    ;;
-  45)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mantis_idefics2"
-    START=0
-    MULTICHOICE=false
-    ;;
-  46)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mantis_idefics2"
-    START=20000
-    MULTICHOICE=false
-    ;;
-  47)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mantis_idefics2"
-    START=40000
-    MULTICHOICE=false
-    ;;
-  48)
-    CONDA_ENV="owl3"
-    MODEL_NAME="mantis_idefics2"
-    START=60000
-    MULTICHOICE=false
-    ;;
-  # ======================================== LLaVA-OV
-    49)
-      CONDA_ENV="llava_ov"
-      MODEL_NAME="llava_ov"
-      START=0
-      MULTICHOICE=true
-      ;;
-    50)
-      CONDA_ENV="llava_ov"
-      MODEL_NAME="llava_ov"
-      START=20000
-      MULTICHOICE=true
-      ;;
-    51)
-      CONDA_ENV="llava_ov"
-      MODEL_NAME="llava_ov"
-      START=40000
-      MULTICHOICE=true
-      ;;
-    52)
-      CONDA_ENV="llava_ov"
-      MODEL_NAME="llava_ov"
-      START=60000
-      MULTICHOICE=true
-      ;;
-    53)
-      CONDA_ENV="llava_ov"
-      MODEL_NAME="llava_ov"
-      START=0
-      MULTICHOICE=false
-      ;;
-    54)
-      CONDA_ENV="llava_ov"
-      MODEL_NAME="llava_ov"
-      START=20000
-      MULTICHOICE=false
-      ;;
-    55)
-      CONDA_ENV="llava_ov"
-      MODEL_NAME="llava_ov"
-      START=40000
-      MULTICHOICE=false
-      ;;
-    56)
-      CONDA_ENV="llava_ov"
-      MODEL_NAME="llava_ov"
-      START=60000
-      MULTICHOICE=false
-      ;;
-  # ======================================== Qwen25
-    57)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen25"
-      START=0
-      MULTICHOICE=true
-      ;;
-    58)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen25"
-      START=20000
-      MULTICHOICE=true
-      ;;
-    59)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen25"
-      START=40000
-      MULTICHOICE=true
-      ;;
-    60)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen25"
-      START=60000
-      MULTICHOICE=true
-      ;;
-    61)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen25"
-      START=0
-      MULTICHOICE=false
-      ;;
-    62)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen25"
-      START=20000
-      MULTICHOICE=false
-      ;;
-    63)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen25"
-      START=40000
-      MULTICHOICE=false
-      ;;
-    64)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen25"
-      START=60000
-      MULTICHOICE=false
-      ;;
-  # ======================================== GPT
-    65)
-      CONDA_ENV="openai"
-      MODEL_NAME="gpt"
-      START=0
-      MULTICHOICE=true
-      ;;
-    66)
-      CONDA_ENV="openai"
-      MODEL_NAME="gpt"
-      START=20000
-      MULTICHOICE=true
-      ;;
-    67)
-      CONDA_ENV="openai"
-      MODEL_NAME="gpt"
-      START=40000
-      MULTICHOICE=true
-      ;;
-    68)
-      CONDA_ENV="openai"
-      MODEL_NAME="gpt"
-      START=60000
-      MULTICHOICE=true
-      ;;
-    69)
-      CONDA_ENV="openai"
-      MODEL_NAME="gpt"
-      START=0
-      MULTICHOICE=false
-      ;;
-    70)
-      CONDA_ENV="openai"
-      MODEL_NAME="gpt"
-      START=20000
-      MULTICHOICE=false
-      ;;
-    71)
-      CONDA_ENV="openai"
-      MODEL_NAME="gpt"
-      START=40000
-      MULTICHOICE=false
-      ;;
-    72)
-      CONDA_ENV="openai"
-      MODEL_NAME="gpt"
-      START=60000
-      MULTICHOICE=false
-      ;;
-
-    73)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen2"
-      START=0
-      LIMIT=5000
-      MULTICHOICE=false
-      ;;
-    74)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen2"
-      START=5000
-      LIMIT=5000
-      MULTICHOICE=false
-      ;;
-    75)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen2"
-      START=10000
-      LIMIT=5000
-      MULTICHOICE=false
-      ;;
-    76)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen2"
-      START=15000
-      LIMIT=10000
-      MULTICHOICE=false
-      ;;
-
-    77)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen2finetuned"
-      START=0
-      LIMIT=5000
-      MULTICHOICE=false
-      ;;
-    78)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen2finetuned"
-      START=5000
-      LIMIT=5000
-      MULTICHOICE=false
-      ;;
-    79)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen2finetuned"
-      START=10000
-      LIMIT=5000
-      MULTICHOICE=false
-      ;;
-    80)
-      CONDA_ENV="qwen"
-      MODEL_NAME="qwen2finetuned"
-      START=15000
-      LIMIT=10000
-      MULTICHOICE=false
-      ;;
-
-esac
-
-# allow internet connection
-module load proxy4server-access
-source /fs/applications/p4s-access/2.0/ActivateP4S.sh -a
-
-source activate $CONDA_ENV
 
 OUTPUT_NAME=${MODEL_NAME}_${MODEL_TYPE}_${DS_NAME}_${DS_VERSION}_${START}
 

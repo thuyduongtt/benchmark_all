@@ -52,6 +52,12 @@ def select_model(model_name, model_type=None):
     elif model_name == 'gpt':
         from models.GPT import GPT
         return GPT()
+    elif model_name == 'paligemma2':
+        from models.PaliGemma2 import PaliGemma2
+        return PaliGemma2()
+    elif model_name == 'paligemma2mix':
+        from models.PaliGemma2Mix import PaliGemma2Mix
+        return PaliGemma2Mix()
 
     return None
 
@@ -86,7 +92,7 @@ if __name__ == '__main__':
         parser.add_argument('--ds_dir', type=str, required=True, help='Path to dataset')
         parser.add_argument('--img_dir', type=str, default='', help='Path to images')
         parser.add_argument('--output_dir_name', type=str, default='output', help='Path to output')
-        parser.add_argument('--split', type=str, default='train', help='Set to "train" or "test"')
+        parser.add_argument('--split', type=str, default='test', help='Set to "train" or "test"')
         parser.add_argument('--start_at', type=int, default=0, help='Index of the sample to start from')
         parser.add_argument('--limit', type=int, default=0, help='Max number of samples')
         parser.add_argument('--multichoice', action='store_true')

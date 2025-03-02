@@ -1,4 +1,3 @@
-```sh
 pip install git+https://github.com/huggingface/transformers accelerate
 
 # It's highly recommanded to use `[decord]` feature for faster video loading.
@@ -9,4 +8,3 @@ pip install flash-attn --no-build-isolation
 
 # For the pipeline
 pip install ijson
-```

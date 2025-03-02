@@ -2,14 +2,14 @@ import ast
 from datetime import datetime
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from CONSTS import *
 from Score import ScoreList
 from evaluation.PROP_CAT import ALL_PROPS
-from evaluation.utils import get_all_csv, format_seconds, extract_answer_idefics2
-from utils import get_ratio, stream_data
-import numpy as np
+from evaluation.utils import get_all_csv, format_seconds
+from utils import stream_data
 
 
 def compute_aggregate(agg, scores):
@@ -24,7 +24,7 @@ def compute_aggregate(agg, scores):
 
 
 def anaylysis_score_reasonvqa(questions_df, limit=0, multichoice=False, output_file=None, extract_answer_fn=None,
-                              agg='avg'):
+                              agg='avg', all_questions=None):
     score = ScoreList()
     score_by_hop = {}
     score_by_scene_graph = {
@@ -35,6 +35,17 @@ def anaylysis_score_reasonvqa(questions_df, limit=0, multichoice=False, output_f
         'VG': ScoreList(),
         'GLDv2': ScoreList()
     }
+
+    # enable advanced analysis by passing all the questions information
+    question_cat = None
+    score_by_category = None
+    if all_questions is not None:
+        question_cat = {}
+        for q in all_questions:
+            if q['property_id'] in ALL_PROPS:
+                question_cat[q['question_id']] = ALL_PROPS[q['property_id']]
+
+        score_by_category = {}
 
     count = 0
     n_error = 0
@@ -57,6 +68,12 @@ def anaylysis_score_reasonvqa(questions_df, limit=0, multichoice=False, output_f
         has_scene_graph = row['has_scene_graph']
 
         ds_name = 'VG' if row['image_id'].startswith('VG_') else 'GLDv2'
+
+        # advanced analysis
+        if question_cat is not None and row['question_id'] in question_cat:
+            for c in question_cat[row['question_id']]:
+                if c not in score_by_category:
+                    score_by_category[c] = ScoreList()
 
         # in case of multiple choice evaluation, we don't have any score
         if multichoice:
@@ -97,6 +114,11 @@ def anaylysis_score_reasonvqa(questions_df, limit=0, multichoice=False, output_f
             score_by_scene_graph['with' if has_scene_graph else 'without'].exact_match.append(s)
             score_by_ds[ds_name].exact_match.append(s)
 
+            # advanced analysis
+            if question_cat is not None and row['question_id'] in question_cat:
+                for c in question_cat[row['question_id']]:
+                    score_by_category[c].exact_match.append(s)
+
         else:
             for s in METRICS:
                 try:
@@ -107,6 +129,11 @@ def anaylysis_score_reasonvqa(questions_df, limit=0, multichoice=False, output_f
                 score_by_hop[n_hop][s].append(val)
                 score_by_scene_graph['with' if has_scene_graph else 'without'][s].append(val)
                 score_by_ds[ds_name][s].append(val)
+
+                # advanced analysis
+                if question_cat is not None and row['question_id'] in question_cat:
+                    for c in question_cat[row['question_id']]:
+                        score_by_category[c][s].append(val)
 
     print('Score:', score, file=output_file)
 
@@ -146,6 +173,16 @@ def anaylysis_score_reasonvqa(questions_df, limit=0, multichoice=False, output_f
             print(ds, f"{evaluation[s][ds]:.1f}", file=output_file)
 
     print('Num of errors:', n_error, file=output_file)
+
+    # advanced analysis
+    if question_cat is not None:
+        print('===== SCORES BY CATEGORY', file=output_file)
+        for c in score_by_category:
+            print('=====', c, file=output_file)
+            for s in METRICS:
+                if multichoice and s != 'exact_match':
+                    continue
+                print(f'{s}: {compute_aggregate(agg, score_by_category[c][s])}', file=output_file)
 
     return evaluation
 
@@ -332,16 +369,19 @@ def count_categories(questions_df, all_questions):
     return len(list(category_dist.keys()))
 
 
-def evaluate(result_root, result_dirs, ds_root, agg='avg', size_analysis=False):
+
+def evaluate(result_root, result_dirs, ds_root, agg='avg', size_analysis=False, advanced_analysis=False):
     if size_analysis:
         sizes = [5000, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 0]
     else:
         sizes = [0]
 
-    if size_analysis:
+    all_questions = None
+    if size_analysis or advanced_analysis:
         json_data = next(stream_data(f'{ds_root}/train.json', path=''))
         all_questions = json_data['questions']
 
+    if size_analysis:
         n_hop = {}
         for q in all_questions:
             n_hop[q['question_id']] = q['n_hop']
@@ -385,7 +425,7 @@ def evaluate(result_root, result_dirs, ds_root, agg='avg', size_analysis=False):
             extract_fn = None if 'extract_fn' not in d else d['extract_fn']
             if d['reasonvqa']:
                 eval_result = anaylysis_score_reasonvqa(questions_df, multichoice=d['multichoice'], output_file=f,
-                                                        extract_answer_fn=extract_fn, agg=agg)
+                                                        extract_answer_fn=extract_fn, agg=agg, all_questions=all_questions)
             else:
                 eval_result = anaylysis_score_vqa(questions_df, multichoice=d['multichoice'], output_file=f,
                                                   extract_answer_fn=extract_fn)
@@ -424,11 +464,12 @@ def evaluate(result_root, result_dirs, ds_root, agg='avg', size_analysis=False):
 
 
 if __name__ == '__main__':
-    DS_NAME = 'OKVQA'
+    DS_NAME = 'ReasonVQA'
     RESULT_ROOT = '/mnt/e/Code/Masters/benchmark_all/results/' + DS_NAME
     DS_ROOT = {
         'ReasonVQA': '/mnt/e/Code/Masters/ds/ReasonVQA_subset/unbalanced',
-        'OKVQA': '/mnt/e/Code/Datasets/OKVQA'
+        'OKVQA': '/mnt/e/Code/Datasets/OKVQA',
+        'VQAv2': '/mnt/e/Code/Datasets/VQAv2',
     }
 
     DIRS = [
@@ -441,6 +482,9 @@ if __name__ == '__main__':
         # {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
         # {'name': 'output_llava_ov__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
         # {'name': 'output_qwen25__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
+        {'name': 'output_gpt__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
+        # {'name': 'output_qwen2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
+        # {'name': 'output_qwen2finetuned__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
 
         # {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
         # {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
@@ -452,12 +496,15 @@ if __name__ == '__main__':
         # {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
         # {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},  # <====== NEW
 
-        {'name': 'output_llava_ov__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
+        # {'name': 'output_llava_ov__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
         # {'name': 'output_llava_ov__VQAv2', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
 
         # {'name': 'output_qwen2__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
         # {'name': 'output_qwen2finetuned__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
         # {'name': 'output_qwen25__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
+        # {'name': 'output_qwen25__VQAv2', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
+
+        # {'name': 'output_gpt__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
 
         # {'name': 'output_mc_idefics2__OKVQA', 'multichoice': True, 'reasonvqa': False,
         #  'extract_fn': extract_answer_idefics2},
@@ -472,4 +519,4 @@ if __name__ == '__main__':
 
     # for a in ['avg', 'std', 'sem']:
     for a in ['avg']:
-        evaluate(RESULT_ROOT, DIRS, DS_ROOT[DS_NAME], agg=a)
+        evaluate(RESULT_ROOT, DIRS, DS_ROOT[DS_NAME], agg=a, advanced_analysis=True)
