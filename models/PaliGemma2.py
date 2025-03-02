@@ -1,12 +1,13 @@
+import os
 import requests
 import torch
 from PIL import Image
 from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration
-import os
 
 from models.BenchmarkModel import BenchmarkModel
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+# device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
 class PaliGemma2(BenchmarkModel):
@@ -18,9 +19,11 @@ class PaliGemma2(BenchmarkModel):
         self.access_token = os.environ.get('HF_ACCESS_TOKEN')
 
     def load_model(self):
-        model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH, token=self.access_token,
+        model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH,
+                                                                  token=self.access_token,
+                                                                  torch_dtype=torch.bfloat16,
+                                                                  device_map="auto",
                                                                   attn_implementation="flash_attention_2")
-        model = model.to(device)
         image_processor = PaliGemmaProcessor.from_pretrained(self.MODEL_PATH, token=self.access_token)
         self.model = model
         self.processor = image_processor
@@ -40,7 +43,7 @@ class PaliGemma2(BenchmarkModel):
         # print(question)
 
         prompt = '<image> ' + question
-        inputs = self.processor(text=prompt, images=image, return_tensors="pt").to(device)
+        inputs = self.processor(text=prompt, images=image, return_tensors="pt").to(self.model.device)
         generation = self.model.generate(**inputs, max_new_tokens=200)
 
         input_len = inputs["input_ids"].shape[-1]

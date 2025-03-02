@@ -1,8 +1,8 @@
+import os
 import requests
 import torch
 from PIL import Image
 from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration
-import os
 
 from models.BenchmarkModel import BenchmarkModel
 
@@ -18,8 +18,10 @@ class PaliGemma2Mix(BenchmarkModel):
         self.access_token = os.environ.get('HF_ACCESS_TOKEN')
 
     def load_model(self):
-        model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH, torch_dtype=torch.bfloat16,
-                                                                  device_map="auto", token=self.access_token,
+        model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH,
+                                                                  token=self.access_token,
+                                                                  torch_dtype=torch.bfloat16,
+                                                                  device_map="auto",
                                                                   attn_implementation="flash_attention_2").eval()
         image_processor = PaliGemmaProcessor.from_pretrained(self.MODEL_PATH, token=self.access_token)
         self.model = model
