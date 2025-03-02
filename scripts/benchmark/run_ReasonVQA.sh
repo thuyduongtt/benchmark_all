@@ -21,8 +21,8 @@ MODELS=(
 "gpt openai"  # 65-68, 69-72
 "qwen2 qwen"  # 73-76, 77-80
 "qwen2finetuned qwen"  # 81-84, 85-88
-"paligemma2 paligemma"  # 89-92, 93-96
-"paligemma2mix paligemma"  # 97-100, 101-104
+"paligemma2 owl3"  # 89-92, 93-96
+"paligemma2mix owl3"  # 97-100, 101-104
 )
 
 # Define models that should be benchmarked on val set only
