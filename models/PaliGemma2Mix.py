@@ -1,5 +1,4 @@
 import os
-import requests
 import torch
 from PIL import Image
 from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration
@@ -40,7 +39,6 @@ class PaliGemma2Mix(BenchmarkModel):
 
         # print(question)
         prompt = '<image> ' + question
-
         inputs = self.processor(text=prompt, images=image, return_tensors="pt").to(torch.bfloat16).to(
             self.model.device)
         input_len = inputs["input_ids"].shape[-1]
@@ -56,5 +54,5 @@ class PaliGemma2Mix(BenchmarkModel):
 
 
 if __name__ == '__main__':
-    m = PaliGemma2()
+    m = PaliGemma2Mix()
     m.test_model()

@@ -1,4 +1,3 @@
-
 # Idefics2
 https://huggingface.co/blog/idefics2
 
@@ -16,6 +15,8 @@ Generate HuggingFace token:
 - Create a new token with type READ
 - Set the environment variable HF_ACCESS_TOKEN to this token
 
+# SmolVLM
+https://huggingface.co/blog/smolvlm
 
 # These models share the same dependencies
 conda install pytorch torchvision pytorch-cuda=12.1 -c pytorch -c nvidia

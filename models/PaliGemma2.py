@@ -1,5 +1,4 @@
 import os
-import requests
 import torch
 from PIL import Image
 from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration
