@@ -21,8 +21,7 @@ class PaliGemma2Mix(BenchmarkModel):
         model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH,
                                                                   token=self.access_token,
                                                                   torch_dtype=torch.bfloat16,
-                                                                  device_map="auto",
-                                                                  attn_implementation="flash_attention_2").eval()
+                                                                  device_map="auto").eval()
         image_processor = PaliGemmaProcessor.from_pretrained(self.MODEL_PATH, token=self.access_token)
         self.model = model
         self.processor = image_processor
