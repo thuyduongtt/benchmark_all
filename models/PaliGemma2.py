@@ -1,6 +1,7 @@
-from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration
-from PIL import Image
 import requests
+import torch
+from PIL import Image
+from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration
 
 from models.BenchmarkModel import BenchmarkModel
 
