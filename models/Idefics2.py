@@ -18,7 +18,7 @@ class Idefics2(BenchmarkModel):
         self.processor = AutoProcessor.from_pretrained(self.MODEL_PATH)
         self.model = AutoModelForVision2Seq.from_pretrained(self.MODEL_PATH).to(device)
 
-    def run_vqa_task(self, image, row_data, choices=None):
+    def run_vqa_task(self, image, row_data, choices=None, image_url=None):
         # return f'prediction, {image}, {row_data["question"]}'  # turn off model for pipeline testing
 
         if self.model is None:

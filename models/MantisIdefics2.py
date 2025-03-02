@@ -18,7 +18,7 @@ class MantisIdefics2(BenchmarkModel):
         self.processor = AutoProcessor.from_pretrained(self.MODEL_PATH)
         self.model = AutoModelForVision2Seq.from_pretrained(self.MODEL_PATH).to(device)
 
-    def run_vqa_task(self, image, row_data, choices=None):
+    def run_vqa_task(self, image, row_data, choices=None, image_url=None):
         if self.model is None:
             self.load_model()
 

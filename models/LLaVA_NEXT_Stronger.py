@@ -28,7 +28,7 @@ class LLaVA_NEXT_Stronger(BenchmarkModel):
         self.tokenizer = tokenizer
         self.processor = image_processor
 
-    def run_vqa_task(self, image, row_data, choices=None):
+    def run_vqa_task(self, image, row_data, choices=None, image_url=None):
         if self.model is None:
             self.load_model()
 
