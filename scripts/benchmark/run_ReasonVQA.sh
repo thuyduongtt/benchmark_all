@@ -23,12 +23,13 @@ MODELS=(
 "qwen2finetuned qwen"  # 81-84, 85-88
 "paligemma2 owl3"  # 89-92, 93-96
 "paligemma2mix owl3"  # 97-100, 101-104
+"smolvlm owl3"  #105-108, 109-112
 )
 
 # Define models that should be benchmarked on val set only
 VAL_MODELS=("qwen2" "qwen2finetuned")
 
-LIMIT=20000
+LIMIT=6000  # train: 51,829 / 4 ≈ 13000 | test: 22,832 / 4 ≈ 6,000
 N_PART=4  # divide the dataset into parts, each contains $LIMIT samples
 N_PART_SCENARIO=$(( $N_PART * 2 ))  # two scenarios: multi-choice & open-ended
 
