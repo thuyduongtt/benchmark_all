@@ -1,4 +1,4 @@
-#BSUB -J pali[89]                 # Specify the job name
+#BSUB -J pali[11]                 # Specify the job name
 #BSUB -W 168:00                # Specify the maximum runtime in "hours:minutes"
 #BSUB -o %x.%j.out            # Determine where the output will be written
 #BSUB -e %x.%j.err            # The same goes for the error file
@@ -40,8 +40,8 @@ module load cuda/12.6.0
 
 chmod -R +x scripts
 
-./scripts/benchmark/run_ReasonVQA.sh $LSB_JOBINDEX
-#./scripts/benchmark/run_OKVQA.sh $LSB_JOBINDEX
+#./scripts/benchmark/run_ReasonVQA.sh $LSB_JOBINDEX
+./scripts/benchmark/run_OKVQA.sh $LSB_JOBINDEX
 #./scripts/benchmark/run_VQAv2.sh $LSB_JOBINDEX
 #./scripts/inference.sh $LSB_JOBINDEX
 #./scripts/finetune.sh

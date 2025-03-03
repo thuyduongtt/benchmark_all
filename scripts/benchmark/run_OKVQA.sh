@@ -47,6 +47,10 @@ case $1 in
     CONDA_ENV="openai"
     MODEL_NAME="gpt"
     ;;
+  11)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2"
+    ;;
 esac
 
 source activate $CONDA_ENV
