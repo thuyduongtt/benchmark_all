@@ -16,9 +16,10 @@ class SmolVLM(BenchmarkModel):
         self.processor = None
 
     def load_model(self):
+        attn_implementation = "flash_attention_2" if device == "cuda" else "eager"
         model = AutoModelForVision2Seq.from_pretrained(self.MODEL_PATH,
                                                        torch_dtype=torch.bfloat16,
-                                                       _attn_implementation="flash_attention_2" if device == "cuda" else "eager")
+                                                       _attn_implementation=attn_implementation).to(device)
         processor = AutoProcessor.from_pretrained(self.MODEL_PATH)
         self.model = model
         self.processor = processor
