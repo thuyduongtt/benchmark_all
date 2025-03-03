@@ -47,12 +47,12 @@ class SmolVLM(BenchmarkModel):
             },
         ]
 
-        prompt = processor.apply_chat_template(messages, add_generation_prompt=True)
-        inputs = processor(text=prompt, images=[image], return_tensors="pt")
+        prompt = self.processor.apply_chat_template(messages, add_generation_prompt=True)
+        inputs = self.processor(text=prompt, images=[image], return_tensors="pt")
         inputs = inputs.to(device)
 
-        generated_ids = model.generate(**inputs, max_new_tokens=500)
-        generated_texts = processor.batch_decode(
+        generated_ids = self.model.generate(**inputs, max_new_tokens=500)
+        generated_texts = self.processor.batch_decode(
             generated_ids,
             skip_special_tokens=True,
         )
