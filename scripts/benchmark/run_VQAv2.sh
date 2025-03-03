@@ -171,7 +171,7 @@ case $1 in
     MODEL_NAME="mantis_idefics2"
     START=210000
     ;;
-
+# ================================================== LLaVA-OV
   33)
     CONDA_ENV="llava_ov"
     MODEL_NAME="llava_ov"
@@ -212,7 +212,7 @@ case $1 in
     MODEL_NAME="llava_ov"
     START=210000
     ;;
-
+# ================================================== Qwen
   41)
     CONDA_ENV="qwen"
     MODEL_NAME="qwen25"
@@ -251,6 +251,47 @@ case $1 in
   48)
     CONDA_ENV="qwen"
     MODEL_NAME="qwen25"
+    START=210000
+    ;;
+  # ================================================== PaliGemma2
+  49)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2"
+    START=0
+    ;;
+  50)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2"
+    START=30000
+    ;;
+  51)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2"
+    START=60000
+    ;;
+  52)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2"
+    START=90000
+    ;;
+  53)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2"
+    START=120000
+    ;;
+  54)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2"
+    START=150000
+    ;;
+  55)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2"
+    START=180000
+    ;;
+  56)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2"
     START=210000
     ;;
 esac
