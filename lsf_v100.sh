@@ -1,4 +1,4 @@
-#BSUB -J GPT[10]               # Specify the job name
+#BSUB -J pali[97]               # Specify the job name
 #BSUB -W 168:00                # Specify the maximum runtime in "hours:minutes"
 #BSUB -o %x.%j.out            # Determine where the output will be written
 #BSUB -e %x.%j.err            # The same goes for the error file
@@ -27,8 +27,8 @@ set -e # Exit on any error. Do not put this line before the two mandatory ones.
 module load conda
 
 # To access internet within bsub script
-# module load proxy4server-access
-# source /fs/applications/p4s-access/2.0/ActivateP4S.sh -a
+ module load proxy4server-access
+ source /fs/applications/p4s-access/2.0/ActivateP4S.sh -a
 
 # Specify your work directory here
 # cd ~/
@@ -37,8 +37,8 @@ module load conda
 
 chmod -R +x scripts
 
-#./scripts/benchmark/run_ReasonVQA.sh $LSB_JOBINDEX
-./scripts/benchmark/run_OKVQA.sh $LSB_JOBINDEX
+./scripts/benchmark/run_ReasonVQA.sh $LSB_JOBINDEX
+#./scripts/benchmark/run_OKVQA.sh $LSB_JOBINDEX
 #./scripts/benchmark/run_VQAv2.sh $LSB_JOBINDEX
 #./scripts/inference.sh $LSB_JOBINDEX
 #./scripts/finetune.sh
