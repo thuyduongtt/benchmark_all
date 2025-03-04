@@ -55,7 +55,7 @@ def prepare_llama_factory(ds_dir, output_dir, splits=None, limit=0, start_at=0):
             count += 1
 
         file_name = f'{output_dir}/reasonvqa_llama_factory_{spl}.json'
-        json.dump(data, open(file_name, 'w'))
+        json.dump(data, open(file_name, 'w', encoding='utf-8'))
         print(f'Exported {count} item(s) to {file_name}')
 
 
@@ -69,7 +69,7 @@ def prepare_gpt(ds_dir, output_dir, splits=None, limit=0, start_at=0):
     for spl in splits:
         json_data = stream_data_reasonvqa(ds_dir, ds_split=spl, limit=limit, start_at=start_at)
         file_name = f'{output_dir}/reasonvqa_gpt_{spl}.jsonl'
-        output_file = open(file_name, 'w')
+        output_file = open(file_name, 'w', encoding="utf-8-sig")  # The "utf-8-sig" encoding adds the BOM automatically
         count = 0
         for d in json_data:
             item = {"messages":
@@ -87,7 +87,7 @@ def prepare_gpt(ds_dir, output_dir, splits=None, limit=0, start_at=0):
                     }
                 ]
             }
-            output_file.write(json.dumps(item) + '\n')
+            output_file.write(json.dumps(item, ensure_ascii=False) + '\n')
             count += 1
 
         output_file.close()
