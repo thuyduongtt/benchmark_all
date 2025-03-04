@@ -51,6 +51,10 @@ case $1 in
     CONDA_ENV="owl3"
     MODEL_NAME="paligemma2"
     ;;
+  12)
+    CONDA_ENV="owl3"
+    MODEL_NAME="smolvlm"
+    ;;
 esac
 
 source activate $CONDA_ENV
