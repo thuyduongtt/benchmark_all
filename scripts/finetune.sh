@@ -10,7 +10,7 @@ source activate finetune
 #python -m finetune.prepare_dataset --ds_dir $DS_DIR
 
 # Step 2: Start finetuning
-cp llama-factory/reasonvqa.json LLaMA-Factory/data/reasonvqa.json
+cp finetune_ds/reasonvqa_llama_factory_train.json LLaMA-Factory/data/reasonvqa.json
 cd LLaMA-Factory
 WANDB_API_KEY=d2057d23808005ee64d642613fc1c20e971f6f71 llamafactory-cli train ../finetune/LF_finetune_qwen2-vl.yaml
 

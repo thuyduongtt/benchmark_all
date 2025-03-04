@@ -329,7 +329,7 @@ case $1 in
     CONDA_ENV="owl3"
     MODEL_NAME="smolvlm"
     START=180000
-    ;;
+      ;;
   64)
     CONDA_ENV="owl3"
     MODEL_NAME="smolvlm"

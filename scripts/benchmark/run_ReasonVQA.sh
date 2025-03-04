@@ -8,7 +8,8 @@ fi
 
 # List of models and conda env
 # the model is selected by argument $1
-# for each model, first half is multi-choice, the second half is open-ended
+# dataset is divided into 4 parts to run benckmark in 2 scenarios: multi-choice and open-ended
+# each model corresponds to 8 indices, first 4 indices are multi-choice, the last 4 indices are open-ended
 MODELS=(
 "mPLUGOwl3 owl3"  # 1-4, 5-8
 "idefics2 owl3"  # 9-12, 13-16
