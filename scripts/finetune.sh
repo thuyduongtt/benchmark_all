@@ -22,3 +22,7 @@ elif [[ "$STAGE" == "3" ]]; then
   # Step 3: Merge LoRA
   cd LLaMA-Factory
   llamafactory-cli export ../finetune/LF_merge_qwen2-vl.yaml
+
+else
+  echo "Invalid STAGE"
+fi
