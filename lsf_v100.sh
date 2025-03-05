@@ -30,8 +30,8 @@ module load conda
 module load cuda/12.6.0
 
 # To access internet within bsub script
- module load proxy4server-access
- source /fs/applications/p4s-access/2.0/ActivateP4S.sh -a
+module load proxy4server-access
+source /fs/applications/p4s-access/2.0/ActivateP4S.sh -a
 
 # Specify your work directory here
 # cd ~/
