@@ -8,3 +8,6 @@ pip install -e ".[torch,metrics]"
 
 # if using axolotl
 pip install axolotl bitsandbytes
+
+# for PaliGemma2
+pip install -q -U bitsandbytes peft git+https://github.com/huggingface/transformers.git
