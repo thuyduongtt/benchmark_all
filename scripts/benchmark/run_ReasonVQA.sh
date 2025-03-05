@@ -27,10 +27,15 @@ MODELS=(
 "smolvlm owl3"  #105-108, 109-112
 )
 
-# Define models that should be benchmarked on val set only
-VAL_MODELS=("qwen2" "qwen2finetuned")
 
-LIMIT=6000  # train: 51,829 / 4 ≈ 13000 | test: 22,832 / 4 ≈ 6,000
+SPLIT="train"
+
+if [[ $SPLIT == "train" ]]; then
+  LIMIT=13000  # train: 51,829 / 4 ≈ 13000
+else
+  LIMIT=6000  # test: 22,832 / 4 ≈ 6,000
+fi
+
 N_PART=4  # divide the dataset into parts, each contains $LIMIT samples
 N_PART_SCENARIO=$(( $N_PART * 2 ))  # two scenarios: multi-choice & open-ended
 
@@ -39,13 +44,6 @@ MODEL_INDEX=$(( ($1 - 1) / $N_PART_SCENARIO ))  # Each model has 8 cases
 MODEL_ENTRY=(${MODELS[$MODEL_INDEX]})  # Split the string into an array
 MODEL_NAME="${MODEL_ENTRY[0]}"
 CONDA_ENV="${MODEL_ENTRY[1]}"
-
-for SPECIAL_MODEL in "${VAL_MODELS[@]}"; do
-  if [[ "$MODEL_NAME" == "$SPECIAL_MODEL" ]]; then
-    LIMIT=5000
-    break
-  fi
-done
 
 # Calculate START
 START=$(( ($1 - 1) % $N_PART * $LIMIT ))
@@ -74,7 +72,8 @@ DS_VERSION="unbalanced"
 DS_DIR="../dataset/${DS_VERSION}"
 MODEL_TYPE=""
 
-OUTPUT_NAME=${MODEL_NAME}_${MODEL_TYPE}_${DS_NAME}_${DS_VERSION}_${START}
+
+OUTPUT_NAME=${MODEL_NAME}_${MODEL_TYPE}_${DS_NAME}_${DS_VERSION}_${SPLIT}_${START}
 
 if [ "$MULTICHOICE" = true ] ; then
   python -m benchmark.start \
@@ -84,6 +83,7 @@ if [ "$MULTICHOICE" = true ] ; then
    --output_dir_name output_mc_${OUTPUT_NAME} \
    --start_at $START \
    --limit $LIMIT \
+   --split $SPLIT \
    --multichoice
 else
   python -m benchmark.start \
@@ -92,5 +92,6 @@ else
    --ds_dir $DS_DIR \
    --output_dir_name output_${OUTPUT_NAME} \
    --start_at $START \
-   --limit $LIMIT
+   --limit $LIMIT \
+   --split $SPLIT
 fi

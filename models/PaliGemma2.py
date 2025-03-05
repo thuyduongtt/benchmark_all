@@ -39,7 +39,7 @@ class PaliGemma2(BenchmarkModel):
 
         # print(question)
 
-        prompt = '<image> ' + question
+        prompt = '<image>answer en ' + question
         inputs = self.processor(text=prompt, images=image, return_tensors="pt").to(self.model.device)
         generation = self.model.generate(**inputs, max_new_tokens=200)
 
