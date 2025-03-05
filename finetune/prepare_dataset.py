@@ -103,5 +103,5 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    prepare_llama_factory(args.ds_dir, args.output_dir, limit=args.limit, start_at=args.start_at)
-    # prepare_gpt(args.ds_dir, args.output_dir, limit=args.limit, start_at=args.start_at)
+    # prepare_llama_factory(args.ds_dir, args.output_dir, limit=args.limit, start_at=args.start_at)
+    prepare_gpt(args.ds_dir, args.output_dir, limit=args.limit, start_at=args.start_at)
