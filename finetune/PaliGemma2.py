@@ -58,11 +58,9 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
                                                                   quantization_config=bnb_config if USE_QLORA else None,
                                                                   torch_dtype=torch.bfloat16)
         model = get_peft_model(model, lora_config)
-        model = model.to(device)
         model.print_trainable_parameters()
     else:
-        model = PaliGemmaForConditionalGeneration.from_pretrained(model_id, token=access_token, device_map="auto").to(device)
-        model = model.to(device)
+        model = PaliGemmaForConditionalGeneration.from_pretrained(model_id, token=access_token, device_map="auto")
 
         if FREEZE_VISION:
             for param in model.vision_tower.parameters():
