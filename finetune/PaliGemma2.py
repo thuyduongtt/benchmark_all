@@ -1,6 +1,5 @@
 import argparse
 import os
-import os
 import torch
 from datasets import load_dataset
 from peft import get_peft_model, LoraConfig
@@ -8,6 +7,7 @@ from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration, 
     BitsAndBytesConfig
 
 from finetune.stream_data import stream_data_reasonvqa
+from huggingface_hub import login
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -34,9 +34,10 @@ def collate_fn(examples, processor):
 
 
 def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
-    ds = stream_data_reasonvqa(ds_dir, ds_split='train', limit=limit, start_at=start_at)
-
     access_token = os.environ.get('HF_ACCESS_TOKEN')
+    login(token=access_token)
+
+    ds = stream_data_reasonvqa(ds_dir, ds_split='train', limit=limit, start_at=start_at)
 
     model_id = "google/paligemma2-10b-pt-448"
     # processor = PaliGemmaProcessor.from_pretrained(model_id, token=access_token)
@@ -54,14 +55,14 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
                 bnb_4bit_quant_type="nf4",
                 bnb_4bit_compute_type=torch.bfloat16
             )
-        model = PaliGemmaForConditionalGeneration.from_pretrained(model_id, token=access_token,
+        model = PaliGemmaForConditionalGeneration.from_pretrained(model_id,
                                                                   quantization_config=bnb_config if USE_QLORA else None,
                                                                   torch_dtype=torch.bfloat16, device_map="auto")
         model = get_peft_model(model, lora_config)
         model.print_trainable_parameters()
 
     else:
-        model = PaliGemmaForConditionalGeneration.from_pretrained(model_id, token=access_token).to(device)
+        model = PaliGemmaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.bfloat16).to(device)
 
         if FREEZE_VISION:
             for param in model.vision_tower.parameters():
