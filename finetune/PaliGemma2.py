@@ -18,7 +18,6 @@ FREEZE_VISION = False
 
 # Function to update image paths to full paths
 def add_full_image_path(example, ds_dir):
-    print(example.keys())
     # Update image path to full path
     example["image_path"] = os.path.join(ds_dir, "train", example["image_id"], ".jpg")
     return example
@@ -46,7 +45,7 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
     login(token=access_token)
 
     # ds = stream_data_reasonvqa(ds_dir, ds_split='train', limit=limit, start_at=start_at)
-    ds = load_dataset("json", data_files={"train": os.path.join(ds_dir, "train.json")})
+    ds = load_dataset("json", data_files={"train": os.path.join(ds_dir, "train.json")}, field='questions')
     ds = ds.map(lambda ex: add_full_image_path(ex, ds_dir))
     print(ds)
     print(ds['train'][0])
