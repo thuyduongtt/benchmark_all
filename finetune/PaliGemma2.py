@@ -105,7 +105,7 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
 
     trainer = Trainer(
         model=model,
-        train_dataset=ds,
+        train_dataset=ds['train'],
         data_collator=lambda examples: collate_fn(examples, processor),
         args=training_args
     )
