@@ -18,10 +18,10 @@ FREEZE_VISION = False
 
 
 # Function to update image paths to full paths
-def add_full_image_path(example, ds_dir):
-    # Update image path to full path
-    example["image_path"] = os.path.join(ds_dir, "train", example["image_id"], ".jpg")
-    return example
+# def add_full_image_path(example, ds_dir):
+#     # Update image path to full path
+#     example["image_path"] = os.path.join(ds_dir, "train", example["image_id"], ".jpg")
+#     return example
 
 
 def collate_fn(examples, processor):
@@ -30,9 +30,11 @@ def collate_fn(examples, processor):
     images = []
 
     for ex in examples:
+        print('=====')
+        print(ex)
         texts.append("<image>answer en " + ex["question"])
         labels.append(ex['answers'][0])
-        images.append(Image.open(ds_dir + '/' + ex['image_path']).convert('RGB'))
+        images.append(Image.open(os.path.join(ds_dir, 'train', ex['image_id'], '.jpg')).convert('RGB'))
 
     tokens = processor(text=texts, images=images, suffix=labels,
                        return_tensors="pt", padding="longest")
@@ -47,7 +49,7 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
 
     # ds = stream_data_reasonvqa(ds_dir, ds_split='train', limit=limit, start_at=start_at)
     ds = load_dataset("json", data_files={"train": os.path.join(ds_dir, "train.json")}, field='questions')
-    ds = ds.map(lambda ex: add_full_image_path(ex, ds_dir))
+    # ds = ds.map(lambda ex: add_full_image_path(ex, ds_dir))
     print(ds)
     print(ds['train'][0])
 
