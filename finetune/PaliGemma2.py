@@ -11,7 +11,7 @@ from finetune.stream_data import stream_data_reasonvqa
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-USE_LORA = False
+USE_LORA = True
 USE_QLORA = False
 FREEZE_VISION = False
 
@@ -39,7 +39,7 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
     access_token = os.environ.get('HF_ACCESS_TOKEN')
 
     model_id = "google/paligemma2-10b-pt-448"
-    processor = PaliGemmaProcessor.from_pretrained(model_id, token=access_token)
+    # processor = PaliGemmaProcessor.from_pretrained(model_id, token=access_token)
     # image_token = processor.tokenizer.convert_tokens_to_ids("<image>")
 
     if USE_LORA or USE_QLORA:
@@ -59,6 +59,7 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
                                                                   torch_dtype=torch.bfloat16, device_map="auto")
         model = get_peft_model(model, lora_config)
         model.print_trainable_parameters()
+
     else:
         model = PaliGemmaForConditionalGeneration.from_pretrained(model_id, token=access_token).to(device)
 
