@@ -2,18 +2,25 @@ import argparse
 import os
 import torch
 from datasets import load_dataset
+from huggingface_hub import login
 from peft import get_peft_model, LoraConfig
 from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration, Trainer, TrainingArguments, \
     BitsAndBytesConfig
 
 from finetune.stream_data import stream_data_reasonvqa
-from huggingface_hub import login
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 USE_LORA = True
 USE_QLORA = False
 FREEZE_VISION = False
+
+
+# Function to update image paths to full paths
+def add_full_image_path(example, ds_dir):
+    # Update image path to full path
+    example["image_path"] = os.path.join(ds_dir, "train", example["image_path"])
+    return example
 
 
 def collate_fn(examples, processor):
@@ -37,7 +44,11 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
     access_token = os.environ.get('HF_ACCESS_TOKEN')
     login(token=access_token)
 
-    ds = stream_data_reasonvqa(ds_dir, ds_split='train', limit=limit, start_at=start_at)
+    # ds = stream_data_reasonvqa(ds_dir, ds_split='train', limit=limit, start_at=start_at)
+    ds = load_dataset("json", data_files={"train": os.path.join(ds_dir, "train.json")})
+    ds = ds.map(lambda ex: add_full_image_path(ex, ds_dir))
+    print(ds)
+    print(ds['train'][0])
 
     model_id = "google/paligemma2-10b-pt-448"
     # processor = PaliGemmaProcessor.from_pretrained(model_id, token=access_token)
