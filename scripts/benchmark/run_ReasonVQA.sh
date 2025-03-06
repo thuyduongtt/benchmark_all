@@ -28,7 +28,7 @@ MODELS=(
 )
 
 
-SPLIT="train"
+SPLIT="test"
 
 if [[ $SPLIT == "train" ]]; then
   LIMIT=13000  # train: 51,829 / 4 ≈ 13000
