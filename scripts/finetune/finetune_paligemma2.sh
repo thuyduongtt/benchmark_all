@@ -7,4 +7,4 @@ DS_DIR="../dataset/${DS_VERSION}"
 source activate finetune
 
 
-python -m finetune.PaliGemma2 --ds_dir $DS_DIR --start_at $START --limit $LIMIT
+python -m finetune.PaliGemma2 --ds_dir $DS_DIR
