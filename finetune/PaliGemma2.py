@@ -18,6 +18,7 @@ FREEZE_VISION = False
 
 # Function to update image paths to full paths
 def add_full_image_path(example, ds_dir):
+    print(example.keys())
     # Update image path to full path
     example["image_path"] = os.path.join(ds_dir, "train", example["image_id"], ".jpg")
     return example
