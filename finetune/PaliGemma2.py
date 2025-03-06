@@ -34,7 +34,7 @@ def collate_fn(examples, processor, ds_dir):
         print(ex)
         texts.append("<image>answer en " + ex["question"])
         labels.append(ex['answers'][0])
-        images.append(Image.open(os.path.join(ds_dir, 'train', ex['image_id'], '.jpg')).convert('RGB'))
+        images.append(Image.open(os.path.join(ds_dir, 'train', ex['image_id'] + '.jpg')).convert('RGB'))
 
     tokens = processor(text=texts, images=images, suffix=labels,
                        return_tensors="pt", padding="longest")
