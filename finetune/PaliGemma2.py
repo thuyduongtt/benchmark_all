@@ -1,6 +1,7 @@
 import argparse
 import os
 import torch
+from PIL import Image
 from datasets import load_dataset
 from huggingface_hub import login
 from peft import get_peft_model, LoraConfig
