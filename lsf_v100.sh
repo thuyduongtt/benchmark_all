@@ -44,7 +44,8 @@ chmod -R +x scripts
 #./scripts/benchmark/run_OKVQA.sh $LSB_JOBINDEX
 #./scripts/benchmark/run_VQAv2.sh $LSB_JOBINDEX
 #./scripts/inference.sh $LSB_JOBINDEX
-./scripts/finetune.sh
+#./scripts/finetune/finetune_llama_factory.sh
+./scripts/finetune/finetune_paligemma2.sh
 
 
 # No longer exit on any error.
