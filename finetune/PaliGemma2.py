@@ -1,5 +1,6 @@
 import argparse
 import os
+import os
 import torch
 from datasets import load_dataset
 from peft import get_peft_model, LoraConfig
@@ -7,7 +8,6 @@ from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration, 
     BitsAndBytesConfig
 
 from finetune.stream_data import stream_data_reasonvqa
-import os
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -54,13 +54,13 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
                 bnb_4bit_quant_type="nf4",
                 bnb_4bit_compute_type=torch.bfloat16
             )
-        model = PaliGemmaForConditionalGeneration.from_pretrained(model_id, device_map="auto", token=access_token,
+        model = PaliGemmaForConditionalGeneration.from_pretrained(model_id, token=access_token,
                                                                   quantization_config=bnb_config if USE_QLORA else None,
-                                                                  torch_dtype=torch.bfloat16)
+                                                                  torch_dtype=torch.bfloat16, device_map="auto")
         model = get_peft_model(model, lora_config)
         model.print_trainable_parameters()
     else:
-        model = PaliGemmaForConditionalGeneration.from_pretrained(model_id, token=access_token, device_map="auto")
+        model = PaliGemmaForConditionalGeneration.from_pretrained(model_id, token=access_token).to(device)
 
         if FREEZE_VISION:
             for param in model.vision_tower.parameters():
@@ -105,7 +105,8 @@ if __name__ == '__main__':
     parser.add_argument('--ds_dir', type=str, required=True, help='Path to original dataset')
     parser.add_argument('--start_at', type=int, default=0, help='Index of the sample to start from')
     parser.add_argument('--limit', type=int, default=0, help='Max number of samples')
-    parser.add_argument('--output_dir', type=str, default='paligemma2_reasonvqa', help='Output directory for fine-tuned results')
+    parser.add_argument('--output_dir', type=str, default='paligemma2_reasonvqa',
+                        help='Output directory for fine-tuned results')
 
     args = parser.parse_args()
 
