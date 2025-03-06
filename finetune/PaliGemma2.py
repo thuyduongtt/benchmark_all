@@ -24,7 +24,7 @@ FREEZE_VISION = False
 #     return example
 
 
-def collate_fn(examples, processor):
+def collate_fn(examples, processor, ds_dir):
     texts = []
     labels = []
     images = []
@@ -109,7 +109,7 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
     trainer = Trainer(
         model=model,
         train_dataset=ds['train'],
-        data_collator=lambda examples: collate_fn(examples, processor),
+        data_collator=lambda examples: collate_fn(examples, processor, ds_dir),
         args=training_args
     )
 
