@@ -5,7 +5,7 @@ from peft import get_peft_model, LoraConfig
 from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration, Trainer, TrainingArguments, \
     BitsAndBytesConfig
 
-from stream_data import stream_data_reasonvqa
+from finetune.stream_data import stream_data_reasonvqa
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
