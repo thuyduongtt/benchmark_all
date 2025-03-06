@@ -53,7 +53,8 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
     print(ds)
     print(ds['train'][0])
 
-    model_id = "google/paligemma2-10b-pt-448"
+    # model_id = "google/paligemma2-10b-pt-448"
+    model_id = "google/paligemma2-10b-mix-448"
     processor = PaliGemmaProcessor.from_pretrained(model_id, token=access_token)
     # image_token = processor.tokenizer.convert_tokens_to_ids("<image>")
 
@@ -88,7 +89,7 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
     training_args = TrainingArguments(
         num_train_epochs=3,
         remove_unused_columns=False,
-        per_device_train_batch_size=1,
+        per_device_train_batch_size=4,
         gradient_accumulation_steps=4,
         warmup_steps=2,
         learning_rate=2e-5,
