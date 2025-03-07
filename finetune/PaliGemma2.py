@@ -94,7 +94,7 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
     training_args = TrainingArguments(
         num_train_epochs=3,
         remove_unused_columns=False,
-        per_device_train_batch_size=4,
+        per_device_train_batch_size=3,
         gradient_accumulation_steps=4,
         warmup_steps=2,
         learning_rate=2e-5,
