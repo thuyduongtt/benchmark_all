@@ -64,6 +64,12 @@ def select_model(model_name, model_type=None):
     elif model_name == 'smolvlm':
         from models.SmolVLM import SmolVLM
         return SmolVLM()
+    elif model_name == 'paligemma2mix_ft':
+        from models.PaliGemma2 import PaliGemma2Mix_Finetuned
+        return PaliGemma2Mix_Finetuned()
+    elif model_name == 'paligemma2mix3b_ft':
+        from models.PaliGemma2 import PaliGemma2Mix3B_Finetuned
+        return PaliGemma2Mix3B_Finetuned()
 
     return None
 

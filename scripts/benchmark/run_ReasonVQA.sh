@@ -26,6 +26,8 @@ MODELS=(
 "paligemma2mix owl3"  # 97-100, 101-104
 "paligemma2mix3b owl3"  #105-108, 109-112
 "smolvlm owl3"  #113-116, 117-120
+"paligemma2mix_ft owl3"  #121-124, 125-128
+"paligemma2mix3b_ft owl3"  #129-132, 133-136
 )
 
 

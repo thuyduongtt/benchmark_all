@@ -128,7 +128,7 @@ if __name__ == '__main__':
     parser.add_argument('--ds_dir', type=str, required=True, help='Path to original dataset')
     parser.add_argument('--start_at', type=int, default=0, help='Index of the sample to start from')
     parser.add_argument('--limit', type=int, default=0, help='Max number of samples')
-    parser.add_argument('--output_dir', type=str, default='paligemma2_reasonvqa',
+    parser.add_argument('--output_dir', type=str, default='ft',
                         help='Output directory for fine-tuned results')
 
     args = parser.parse_args()

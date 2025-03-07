@@ -482,9 +482,11 @@ if __name__ == '__main__':
         # {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
         # {'name': 'output_llava_ov__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
         # {'name': 'output_qwen25__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
-        {'name': 'output_gpt__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
+        # {'name': 'output_gpt__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
         # {'name': 'output_qwen2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
         # {'name': 'output_qwen2finetuned__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
+        {'name': 'output_paligemma2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
+        {'name': 'output_smolvlm__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
 
         # {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
         # {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
@@ -495,6 +497,8 @@ if __name__ == '__main__':
         # {'name': 'output_mc_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
         # {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
         # {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},  # <====== NEW
+        {'name': 'output_mc_paligemma2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},  # <====== NEW
+        {'name': 'output_mc_smolvlm__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},  # <====== NEW
 
         # {'name': 'output_llava_ov__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
         # {'name': 'output_llava_ov__VQAv2', 'multichoice': False, 'reasonvqa': False},  # <====== NEW

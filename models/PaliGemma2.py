@@ -67,3 +67,12 @@ class PaliGemma2Mix(PaliGemma2Base):
 class PaliGemma2Mix3B(PaliGemma2Base):
     def __init__(self):
         super().__init__('google/paligemma2-3b-mix-448')
+
+
+class PaliGemma2Mix_Finetuned(PaliGemma2Base):
+    def __init__(self):
+        super().__init__('ft_google_paligemma2-10b-mix-448/checkpoint-9717')
+
+class PaliGemma2Mix3B_Finetuned(PaliGemma2Base):
+    def __init__(self):
+        super().__init__('ft_google_paligemma2-3b-mix-448/checkpoint-9717')

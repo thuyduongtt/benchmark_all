@@ -163,13 +163,35 @@ def compute_score(list_of_csv, output_dir, limit=0, extract_answer_fn=None):
 
 
 if __name__ == '__main__':
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('--result_dir', type=str, required=True)
-    # args = parser.parse_args()
+    result_dirs = {
+        'ReasonVQA': [
+            'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced',
+            'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced',
+            'output_gpt__ReasonVQA_unbalanced',
+            'output_idefics2__ReasonVQA_unbalanced',
+            'output_llava_ov__ReasonVQA_unbalanced',
+            'output_mantis_idefics2__ReasonVQA_unbalanced',
+            'output_mantis_siglip__ReasonVQA_unbalanced',
+            'output_mPLUGOwl2__ReasonVQA_unbalanced',
+            'output_mPLUGOwl3__ReasonVQA_unbalanced',
+            'output_paligemma2__ReasonVQA_unbalanced',
+            'output_qwen25__ReasonVQA_unbalanced',
+            'output_qwen2finetuned__ReasonVQA_unbalanced',
+            'output_qwen2__ReasonVQA_unbalanced',
+            'output_smolvlm__ReasonVQA_unbalanced',
+        ]
+    }
 
-    result_dir = '../results/VQAv2/output_qwen25__VQAv2'
+    overwrite = False
 
-    all_csv_files = []
-    get_all_csv(result_dir, all_csv_files)
+    for ds in result_dirs:
+        for res_dir in result_dirs[ds]:
+            result_dir = f'../results/{ds}/{res_dir}'
+            if Path(f'{result_dir}/score').exists() and not overwrite:
+                print(result_dir, 'already has score. Skipped :)')
+                continue
+            all_csv_files = []
+            get_all_csv(result_dir, all_csv_files)
 
-    compute_score(all_csv_files, f'{result_dir}/score')
+            print('Computing scores for', result_dir)
+            compute_score(all_csv_files, f'{result_dir}/score')
