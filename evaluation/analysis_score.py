@@ -464,63 +464,71 @@ def evaluate(result_root, result_dirs, ds_root, agg='avg', size_analysis=False, 
 
 
 if __name__ == '__main__':
-    DS_NAME = 'ReasonVQA'
-    RESULT_ROOT = '/mnt/e/Code/Masters/benchmark_all/results/' + DS_NAME
     DS_ROOT = {
         'ReasonVQA': '/mnt/e/Code/Masters/ds/ReasonVQA_subset/unbalanced',
         'OKVQA': '/mnt/e/Code/Datasets/OKVQA',
         'VQAv2': '/mnt/e/Code/Datasets/VQAv2',
     }
 
-    DIRS = [
-        # {'name': 'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        # {'name': 'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        # {'name': 'output_mPLUGOwl2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        # {'name': 'output_idefics2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        # {'name': 'output_mantis_siglip__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        # {'name': 'output_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        # {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},
-        # {'name': 'output_llava_ov__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
-        # {'name': 'output_qwen25__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
-        # {'name': 'output_gpt__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
-        # {'name': 'output_qwen2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
-        # {'name': 'output_qwen2finetuned__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
-        {'name': 'output_paligemma2__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
-        {'name': 'output_smolvlm__ReasonVQA_unbalanced', 'multichoice': False, 'reasonvqa': True},  # <====== NEW
+    DIRS = {
+        'ReasonVQA': {
+            'open': [
+                # {'name': 'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced'},
+                # {'name': 'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced'},
+                # {'name': 'output_mPLUGOwl2__ReasonVQA_unbalanced'},
+                # {'name': 'output_idefics2__ReasonVQA_unbalanced'},
+                # {'name': 'output_mantis_siglip__ReasonVQA_unbalanced'},
+                # {'name': 'output_mantis_idefics2__ReasonVQA_unbalanced'},
+                # {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced'},
+                # {'name': 'output_llava_ov__ReasonVQA_unbalanced'},  # <====== NEW
+                # {'name': 'output_qwen25__ReasonVQA_unbalanced'},  # <====== NEW
+                # {'name': 'output_gpt__ReasonVQA_unbalanced'},  # <====== NEW
+                # {'name': 'output_qwen2__ReasonVQA_unbalanced'},  # <====== NEW
+                # {'name': 'output_qwen2finetuned__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_paligemma2__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_smolvlm__ReasonVQA_unbalanced'},  # <====== NEW
+            ],
+            'multichoice': [
+                # {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced'},
+                # {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced'},
+                # {'name': 'output_mc_mPLUGOwl2__ReasonVQA_unbalanced'},
+                # {'name': 'output_mc_idefics2__ReasonVQA_unbalanced', 'extract_fn': extract_answer_idefics2},
+                # {'name': 'output_mc_mantis_siglip__ReasonVQA_unbalanced'},
+                # {'name': 'output_mc_mantis_idefics2__ReasonVQA_unbalanced'},
+                # {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced'},
+                # {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_mc_paligemma2__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_mc_smolvlm__ReasonVQA_unbalanced'},  # <====== NEW
+            ]
+        },
+        'OKVQA':{
+            'open': [
+                # {'name': 'output_llava_ov__OKVQA'},  # <====== NEW
+                # {'name': 'output_qwen2__OKVQA'},  # <====== NEW
+                # {'name': 'output_qwen2finetuned__OKVQA'},  # <====== NEW
+                # {'name': 'output_qwen25__OKVQA'},  # <====== NEW
+                # {'name': 'output_gpt__OKVQA'},  # <====== NEW
+                {'name': 'output_paligemma2__OKVQA'},  # <====== NEW
+            ],
+            'multichoice': [
+                # {'name': 'output_mc_idefics2__OKVQA', 'extract_fn': extract_answer_idefics2},
+                # {'name': 'output_mc_mantis_idefics2__OKVQA'},
+                # {'name': 'output_mc_mantis_siglip__OKVQA'},
+                # {'name': 'output_mc_mPLUGOwl3__OKVQA'},
+            ]
+        },
+        'VQAv2': {
+            'open': [
+                # {'name': 'output_llava_ov__VQAv2'},  # <====== NEW
+                # {'name': 'output_qwen25__VQAv2'},  # <====== NEW
+            ],
+            'multichoice': [
+                # {'name': 'output_mc_mantis_idefics2__VQAv2'},
+                # {'name': 'output_mc_mantis_siglip__VQAv2'},
+                # {'name': 'output_mc_mPLUGOwl3__VQAv2'},
+            ]
+        }
+    }
 
-        # {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        # {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        # {'name': 'output_mc_mPLUGOwl2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        # {'name': 'output_mc_idefics2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True,
-        #  'extract_fn': extract_answer_idefics2},
-        # {'name': 'output_mc_mantis_siglip__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        # {'name': 'output_mc_mantis_idefics2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        # {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},
-        # {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},  # <====== NEW
-        {'name': 'output_mc_paligemma2__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},  # <====== NEW
-        {'name': 'output_mc_smolvlm__ReasonVQA_unbalanced', 'multichoice': True, 'reasonvqa': True},  # <====== NEW
-
-        # {'name': 'output_llava_ov__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
-        # {'name': 'output_llava_ov__VQAv2', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
-
-        # {'name': 'output_qwen2__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
-        # {'name': 'output_qwen2finetuned__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
-        # {'name': 'output_qwen25__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
-        # {'name': 'output_qwen25__VQAv2', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
-
-        # {'name': 'output_gpt__OKVQA', 'multichoice': False, 'reasonvqa': False},  # <====== NEW
-
-        # {'name': 'output_mc_idefics2__OKVQA', 'multichoice': True, 'reasonvqa': False,
-        #  'extract_fn': extract_answer_idefics2},
-        # {'name': 'output_mc_mantis_idefics2__OKVQA', 'multichoice': True, 'reasonvqa': False},
-        # {'name': 'output_mc_mantis_siglip__OKVQA', 'multichoice': True, 'reasonvqa': False},
-        # {'name': 'output_mc_mPLUGOwl3__OKVQA', 'multichoice': True, 'reasonvqa': False},
-
-        # {'name': 'output_mc_mantis_idefics2__VQAv2', 'multichoice': True, 'reasonvqa': False},
-        # {'name': 'output_mc_mantis_siglip__VQAv2', 'multichoice': True, 'reasonvqa': False},
-        # {'name': 'output_mc_mPLUGOwl3__VQAv2', 'multichoice': True, 'reasonvqa': False},
-    ]
-
-    # for a in ['avg', 'std', 'sem']:
-    for a in ['avg']:
+    for a in ['avg', 'std', 'sem']:
         evaluate(RESULT_ROOT, DIRS, DS_ROOT[DS_NAME], agg=a, advanced_analysis=True)
