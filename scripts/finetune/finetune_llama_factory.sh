@@ -1,12 +1,12 @@
 #!/bin/bash
 
-DS_VERSION="unbalanced"
+DS_VERSION="balanced_50"
 #DS_DIR="../dataset/${DS_VERSION}"
 DS_DIR="/fs/scratch/rb_bd_dlp_rng_dl01_cr_ICT_employees/trh7rng/dataset/${DS_VERSION}"
 
 source activate finetune
 
-STAGE=3
+STAGE=2
 
 if [[ "$STAGE" == "1" ]]; then
   # Step 1: Prepare the dataset

@@ -9,7 +9,7 @@ from CONSTS import *
 from Score import ScoreList
 from evaluation.PROP_CAT import ALL_PROPS
 from evaluation.utils import get_all_csv, format_seconds
-from utils import stream_data
+from utils import stream_data, extract_answer_idefics2
 
 
 def compute_aggregate(agg, scores):
@@ -369,7 +369,6 @@ def count_categories(questions_df, all_questions):
     return len(list(category_dist.keys()))
 
 
-
 def evaluate(result_root, result_dirs, ds_root, agg='avg', size_analysis=False, advanced_analysis=False):
     if size_analysis:
         sizes = [5000, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 0]
@@ -391,7 +390,7 @@ def evaluate(result_root, result_dirs, ds_root, agg='avg', size_analysis=False, 
         evaluations = {}
         for d in result_dirs:
             print('=' * 30, d)
-            if d['multichoice']:
+            if d['mc']:
                 score_dir = f'{result_root}/{d["name"]}'
             else:
                 score_dir = f'{result_root}/{d["name"]}/score'
@@ -424,10 +423,11 @@ def evaluate(result_root, result_dirs, ds_root, agg='avg', size_analysis=False, 
 
             extract_fn = None if 'extract_fn' not in d else d['extract_fn']
             if d['reasonvqa']:
-                eval_result = anaylysis_score_reasonvqa(questions_df, multichoice=d['multichoice'], output_file=f,
-                                                        extract_answer_fn=extract_fn, agg=agg, all_questions=all_questions)
+                eval_result = anaylysis_score_reasonvqa(questions_df, multichoice=d['mc'], output_file=f,
+                                                        extract_answer_fn=extract_fn, agg=agg,
+                                                        all_questions=all_questions)
             else:
-                eval_result = anaylysis_score_vqa(questions_df, multichoice=d['multichoice'], output_file=f,
+                eval_result = anaylysis_score_vqa(questions_df, multichoice=d['mc'], output_file=f,
                                                   extract_answer_fn=extract_fn)
 
             if s == 0:  # only calculate processing time in full size
@@ -441,7 +441,7 @@ def evaluate(result_root, result_dirs, ds_root, agg='avg', size_analysis=False, 
                 print('Avg. processing time', format_seconds(avg_diff), file=f)
 
             for m in eval_result:
-                metric = 'multichoice' if d['multichoice'] else m
+                metric = 'multichoice' if d['mc'] else m
                 if metric not in evaluations:
                     evaluations[metric] = {
                         'model': []
@@ -470,65 +470,85 @@ if __name__ == '__main__':
         'VQAv2': '/mnt/e/Code/Datasets/VQAv2',
     }
 
-    DIRS = {
+    RESULTS = {
         'ReasonVQA': {
             'open': [
-                # {'name': 'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced'},
-                # {'name': 'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced'},
-                # {'name': 'output_mPLUGOwl2__ReasonVQA_unbalanced'},
-                # {'name': 'output_idefics2__ReasonVQA_unbalanced'},
-                # {'name': 'output_mantis_siglip__ReasonVQA_unbalanced'},
-                # {'name': 'output_mantis_idefics2__ReasonVQA_unbalanced'},
-                # {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced'},
-                # {'name': 'output_llava_ov__ReasonVQA_unbalanced'},  # <====== NEW
-                # {'name': 'output_qwen25__ReasonVQA_unbalanced'},  # <====== NEW
-                # {'name': 'output_gpt__ReasonVQA_unbalanced'},  # <====== NEW
-                # {'name': 'output_qwen2__ReasonVQA_unbalanced'},  # <====== NEW
-                # {'name': 'output_qwen2finetuned__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced'},
+                {'name': 'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced'},
+                {'name': 'output_mPLUGOwl2__ReasonVQA_unbalanced'},
+                {'name': 'output_idefics2__ReasonVQA_unbalanced'},
+                {'name': 'output_mantis_siglip__ReasonVQA_unbalanced'},
+                {'name': 'output_mantis_idefics2__ReasonVQA_unbalanced'},
+                {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced'},
+                {'name': 'output_llava_ov__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_qwen25__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_gpt__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_qwen2__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_qwen2finetuned__ReasonVQA_unbalanced'},  # <====== NEW
                 {'name': 'output_paligemma2__ReasonVQA_unbalanced'},  # <====== NEW
                 {'name': 'output_smolvlm__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_paligemma2mix__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_paligemma2mix3b__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_paligemma2mix3b_ft__ReasonVQA_unbalanced'},  # <====== NEW
             ],
-            'multichoice': [
-                # {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced'},
-                # {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced'},
-                # {'name': 'output_mc_mPLUGOwl2__ReasonVQA_unbalanced'},
-                # {'name': 'output_mc_idefics2__ReasonVQA_unbalanced', 'extract_fn': extract_answer_idefics2},
-                # {'name': 'output_mc_mantis_siglip__ReasonVQA_unbalanced'},
-                # {'name': 'output_mc_mantis_idefics2__ReasonVQA_unbalanced'},
-                # {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced'},
-                # {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced'},  # <====== NEW
+            'mc': [
+                {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced'},
+                {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced'},
+                {'name': 'output_mc_mPLUGOwl2__ReasonVQA_unbalanced'},
+                {'name': 'output_mc_idefics2__ReasonVQA_unbalanced', 'extract_fn': extract_answer_idefics2},
+                {'name': 'output_mc_mantis_siglip__ReasonVQA_unbalanced'},
+                {'name': 'output_mc_mantis_idefics2__ReasonVQA_unbalanced'},
+                {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced'},
+                {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced'},  # <====== NEW
                 {'name': 'output_mc_paligemma2__ReasonVQA_unbalanced'},  # <====== NEW
                 {'name': 'output_mc_smolvlm__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_mc_paligemma2mix__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_mc_paligemma2mix3b__ReasonVQA_unbalanced'},  # <====== NEW
             ]
         },
-        'OKVQA':{
+        'OKVQA': {
             'open': [
-                # {'name': 'output_llava_ov__OKVQA'},  # <====== NEW
-                # {'name': 'output_qwen2__OKVQA'},  # <====== NEW
-                # {'name': 'output_qwen2finetuned__OKVQA'},  # <====== NEW
-                # {'name': 'output_qwen25__OKVQA'},  # <====== NEW
-                # {'name': 'output_gpt__OKVQA'},  # <====== NEW
+                {'name': 'output_llava_ov__OKVQA'},  # <====== NEW
+                {'name': 'output_qwen2__OKVQA'},  # <====== NEW
+                {'name': 'output_qwen2finetuned__OKVQA'},  # <====== NEW
+                {'name': 'output_qwen25__OKVQA'},  # <====== NEW
+                {'name': 'output_gpt__OKVQA'},  # <====== NEW
                 {'name': 'output_paligemma2__OKVQA'},  # <====== NEW
+                {'name': 'output_paligemma2mix__OKVQA'},  # <====== NEW
+                {'name': 'output_smolvlm__OKVQA'},  # <====== NEW
             ],
-            'multichoice': [
-                # {'name': 'output_mc_idefics2__OKVQA', 'extract_fn': extract_answer_idefics2},
-                # {'name': 'output_mc_mantis_idefics2__OKVQA'},
-                # {'name': 'output_mc_mantis_siglip__OKVQA'},
-                # {'name': 'output_mc_mPLUGOwl3__OKVQA'},
+            'mc': [
+                {'name': 'output_mc_idefics2__OKVQA', 'extract_fn': extract_answer_idefics2},
+                {'name': 'output_mc_mantis_idefics2__OKVQA'},
+                {'name': 'output_mc_mantis_siglip__OKVQA'},
+                {'name': 'output_mc_mPLUGOwl3__OKVQA'},
             ]
         },
         'VQAv2': {
             'open': [
-                # {'name': 'output_llava_ov__VQAv2'},  # <====== NEW
-                # {'name': 'output_qwen25__VQAv2'},  # <====== NEW
+                {'name': 'output_llava_ov__VQAv2'},  # <====== NEW
+                {'name': 'output_qwen25__VQAv2'},  # <====== NEW
+                {'name': 'output_smolvlm__VQAv2'},  # <====== NEW
+                {'name': 'output_paligemma2__VQAv2'},  # <====== NEW
+                {'name': 'output_paligemma2mix__VQAv2'},  # <====== NEW
             ],
-            'multichoice': [
-                # {'name': 'output_mc_mantis_idefics2__VQAv2'},
-                # {'name': 'output_mc_mantis_siglip__VQAv2'},
-                # {'name': 'output_mc_mPLUGOwl3__VQAv2'},
+            'mc': [
+                {'name': 'output_mc_mantis_idefics2__VQAv2'},
+                {'name': 'output_mc_mantis_siglip__VQAv2'},
+                {'name': 'output_mc_mPLUGOwl3__VQAv2'},
             ]
         }
     }
 
-    for a in ['avg', 'std', 'sem']:
-        evaluate(RESULT_ROOT, DIRS, DS_ROOT[DS_NAME], agg=a, advanced_analysis=True)
+    for ds_name in RESULTS:
+        res_root = '/mnt/e/Code/Masters/benchmark_all/results/' + ds_name
+        res_dirs = []
+        for r in RESULTS[ds_name]['open']:
+            res_dirs.append({
+                'name': r['name'],
+                'mc': False,
+                'reasonvqa': ds_name == 'ReasonVQA'
+            })
+        print(res_dirs)
+        # for a in ['avg', 'std', 'sem']:
+        #     evaluate(res_root, res_dirs, DS_ROOT[ds_name], agg=a, advanced_analysis=True)
