@@ -1,34 +1,28 @@
 import os
 import torch
 from PIL import Image
-from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration, AutoProcessor, AutoModelForCausalLM
+from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration
 
 from models.BenchmarkModel import BenchmarkModel
-
 
 # device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
 class PaliGemma2Base(BenchmarkModel):
-    def __init__(self, model_path, finetuned=False):
+    def __init__(self, model_path):
         super().__init__()
         self.MODEL_PATH = model_path
         self.model = None
         self.processor = None
         self.access_token = os.environ.get('HF_ACCESS_TOKEN')
-        self.finetuned = finetuned
 
     def load_model(self):
-        if self.finetuned:
-            model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH, device_map='auto')
-            image_processor = AutoProcessor.from_pretrained(self.MODEL_PATH)
-        else:
-            model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH,
-                                                                      token=self.access_token,
-                                                                      torch_dtype=torch.bfloat16,
-                                                                      device_map="auto").eval()
-            image_processor = PaliGemmaProcessor.from_pretrained(self.MODEL_PATH,
-                                                                 token=self.access_token)
+        model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH,
+                                                                  token=self.access_token,
+                                                                  torch_dtype=torch.bfloat16,
+                                                                  device_map="auto").eval()
+        image_processor = PaliGemmaProcessor.from_pretrained(self.MODEL_PATH,
+                                                             token=self.access_token)
         self.model = model
         self.processor = image_processor
 
@@ -77,9 +71,8 @@ class PaliGemma2Mix3B(PaliGemma2Base):
 
 class PaliGemma2Mix_Finetuned(PaliGemma2Base):
     def __init__(self):
-        super().__init__('ft_google_paligemma2-10b-mix-448/checkpoint-9717', finetuned=True)
-
+        super().__init__('ft_google_paligemma2-10b-mix-448/checkpoint-9717')
 
 class PaliGemma2Mix3B_Finetuned(PaliGemma2Base):
     def __init__(self):
-        super().__init__('ft_google_paligemma2-3b-mix-448/checkpoint-9717', finetuned=True)
+        super().__init__('ft_google_paligemma2-3b-mix-448/checkpoint-9717')
