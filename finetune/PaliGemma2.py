@@ -54,8 +54,8 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
     print(ds['train'][0])
 
     # model_id = "google/paligemma2-10b-pt-448"
-    # model_id = "google/paligemma2-10b-mix-448"
-    model_id = "google/paligemma2-3b-mix-448"
+    model_id = "google/paligemma2-10b-mix-448"
+    # model_id = "google/paligemma2-3b-mix-448"
     processor = PaliGemmaProcessor.from_pretrained(model_id, token=access_token)
     # image_token = processor.tokenizer.convert_tokens_to_ids("<image>")
 
@@ -71,9 +71,13 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
                 bnb_4bit_quant_type="nf4",
                 bnb_4bit_compute_type=torch.bfloat16
             )
+
+        attn_implementation = "flash_attention_2"
         model = PaliGemmaForConditionalGeneration.from_pretrained(model_id,
                                                                   quantization_config=bnb_config if USE_QLORA else None,
-                                                                  torch_dtype=torch.bfloat16, device_map="auto")
+                                                                  torch_dtype=torch.bfloat16,
+                                                                  _attn_implementation=attn_implementation,
+                                                                  device_map="auto")
         model = get_peft_model(model, lora_config)
         model.print_trainable_parameters()
 
