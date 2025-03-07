@@ -72,7 +72,7 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
                 bnb_4bit_compute_type=torch.bfloat16
             )
 
-        attn_implementation = "flash_attention_2"
+        attn_implementation = "eager" # "flash_attention_2"
         model = PaliGemmaForConditionalGeneration.from_pretrained(model_id,
                                                                   quantization_config=bnb_config if USE_QLORA else None,
                                                                   torch_dtype=torch.bfloat16,
