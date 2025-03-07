@@ -335,6 +335,47 @@ case $1 in
     MODEL_NAME="smolvlm"
     START=210000
     ;;
+  # ================================================== PaliGemma2Mix
+  65)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2mix"
+    START=0
+    ;;
+  66)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2mix"
+    START=30000
+    ;;
+  67)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2mix"
+    START=60000
+    ;;
+  68)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2mix"
+    START=90000
+    ;;
+  69)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2mix"
+    START=120000
+    ;;
+  70)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2mix"
+    START=150000
+    ;;
+  71)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2mix"
+    START=180000
+      ;;
+  72)
+    CONDA_ENV="owl3"
+    MODEL_NAME="paligemma2mix"
+    START=210000
+    ;;
 esac
 
 source activate $CONDA_ENV
