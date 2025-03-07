@@ -109,7 +109,7 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
         push_to_hub=False,
         output_dir=f'{output_dir}_{model_id}'.replace('/', '_'),
         bf16=True,
-        report_to=["tensorboard"],
+        report_to=["wandb"],
         dataloader_pin_memory=False
     )
 
