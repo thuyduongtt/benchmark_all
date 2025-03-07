@@ -54,8 +54,8 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
     print(ds['train'][0])
 
     # model_id = "google/paligemma2-10b-pt-448"
-    model_id = "google/paligemma2-10b-mix-448"
-    # model_id = "google/paligemma2-3b-mix-448"
+    # model_id = "google/paligemma2-10b-mix-448"
+    model_id = "google/paligemma2-3b-mix-448"
     processor = PaliGemmaProcessor.from_pretrained(model_id, token=access_token)
     # image_token = processor.tokenizer.convert_tokens_to_ids("<image>")
 
@@ -72,7 +72,8 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
                 bnb_4bit_compute_type=torch.bfloat16
             )
 
-        attn_implementation = "eager" # "flash_attention_2"
+        attn_implementation = "flash_attention_2"
+        # attn_implementation = "eager"
         model = PaliGemmaForConditionalGeneration.from_pretrained(model_id,
                                                                   quantization_config=bnb_config if USE_QLORA else None,
                                                                   torch_dtype=torch.bfloat16,
@@ -94,7 +95,7 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
     training_args = TrainingArguments(
         num_train_epochs=3,
         remove_unused_columns=False,
-        per_device_train_batch_size=3,
+        per_device_train_batch_size=4,
         gradient_accumulation_steps=4,
         warmup_steps=2,
         learning_rate=2e-5,
@@ -105,8 +106,8 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
         save_strategy="steps",
         save_steps=1000,
         save_total_limit=1,
-        push_to_hub=True,
-        output_dir=output_dir,
+        push_to_hub=False,
+        output_dir=f'{output_dir}_{model_id}'.replace('/', '_'),
         bf16=True,
         report_to=["tensorboard"],
         dataloader_pin_memory=False
