@@ -2,7 +2,7 @@ import argparse
 import json
 from pathlib import Path
 
-from stream_data import stream_data_reasonvqa
+from finetune.stream_data import stream_data_reasonvqa
 
 
 def prepare_llama_factory(ds_dir, output_dir, splits=None, limit=0, start_at=0):
