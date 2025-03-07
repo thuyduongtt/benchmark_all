@@ -56,8 +56,11 @@ def select_model(model_name, model_type=None):
         from models.PaliGemma2 import PaliGemma2
         return PaliGemma2()
     elif model_name == 'paligemma2mix':
-        from models.PaliGemma2Mix import PaliGemma2Mix
+        from models.PaliGemma2 import PaliGemma2Mix
         return PaliGemma2Mix()
+    elif model_name == 'paligemma2mix3b':
+        from models.PaliGemma2 import PaliGemma2Mix3B
+        return PaliGemma2Mix3B()
     elif model_name == 'smolvlm':
         from models.SmolVLM import SmolVLM
         return SmolVLM()

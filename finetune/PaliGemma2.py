@@ -54,7 +54,8 @@ def start_finetuning(ds_dir, output_dir, start_at=0, limit=0):
     print(ds['train'][0])
 
     # model_id = "google/paligemma2-10b-pt-448"
-    model_id = "google/paligemma2-10b-mix-448"
+    # model_id = "google/paligemma2-10b-mix-448"
+    model_id = "google/paligemma2-3b-mix-448"
     processor = PaliGemmaProcessor.from_pretrained(model_id, token=access_token)
     # image_token = processor.tokenizer.convert_tokens_to_ids("<image>")
 
