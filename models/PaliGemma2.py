@@ -20,7 +20,7 @@ class PaliGemma2Base(BenchmarkModel):
 
     def load_model(self):
         if self.finetuned:
-            model = AutoModelForCausalLM.from_pretrained(self.MODEL_PATH, device_map='auto')
+            model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH, device_map='auto')
             image_processor = AutoProcessor.from_pretrained(self.MODEL_PATH)
         else:
             model = PaliGemmaForConditionalGeneration.from_pretrained(self.MODEL_PATH,
