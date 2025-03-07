@@ -71,7 +71,7 @@ class PaliGemma2Mix3B(PaliGemma2Base):
 
 class PaliGemma2Mix_Finetuned(PaliGemma2Base):
     def __init__(self):
-        super().__init__('ft_google_paligemma2-10b-mix-448/checkpoint-9717')
+        super().__init__('paligemma2_reasonvqa/checkpoint-11000')
 
 class PaliGemma2Mix3B_Finetuned(PaliGemma2Base):
     def __init__(self):

@@ -549,6 +549,5 @@ if __name__ == '__main__':
                 'mc': False,
                 'reasonvqa': ds_name == 'ReasonVQA'
             })
-        print(res_dirs)
-        # for a in ['avg', 'std', 'sem']:
-        #     evaluate(res_root, res_dirs, DS_ROOT[ds_name], agg=a, advanced_analysis=True)
+        for a in ['avg', 'std', 'sem']:
+            evaluate(res_root, res_dirs, DS_ROOT[ds_name], agg=a, advanced_analysis=True)
