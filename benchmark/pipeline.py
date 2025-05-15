@@ -47,14 +47,14 @@ def run_pipeline_by_question(task, ds_name, ds_dir, img_dir, output_dir_name, li
         if multichoice:
             shuffled_choices, _ = shuffle(d['choices'], d['choice_scores'])
             if not visual_disabled:
-                prediction = task(d, img_path, shuffled_choices, image_url=d['image_url'])
+                prediction = task(d, image=img_path, choices=shuffled_choices, image_url=d['image_url'])
             else:
-                prediction = task(d, None, shuffled_choices, image_url=d['image_url'])
+                prediction = task(d, image=None, choices=shuffled_choices, image_url=None)
         else:
             if not visual_disabled:
-                prediction = task(d, img_path, image_url=d['image_url'])
+                prediction = task(d, image=img_path, image_url=d['image_url'])
             else:
-                prediction = task(d, None, image_url=d['image_url'])
+                prediction = task(d, image=None, image_url=None)
 
         # prediction = 'prediction'  # turn off model for pipeline testing
 
