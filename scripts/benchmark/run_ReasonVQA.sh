@@ -74,7 +74,7 @@ DS_VERSION="unbalanced"
 
 DS_DIR="../dataset/${DS_VERSION}"
 MODEL_TYPE=""
-VISUAL_DISABLED=false
+VISUAL_DISABLED=true
 
 
 OUTPUT_NAME=${MODEL_NAME}_${MODEL_TYPE}_${DS_NAME}_${DS_VERSION}_${SPLIT}_${START}
@@ -95,14 +95,16 @@ if [ "$MULTICHOICE" = true ] ; then
      --model_name $MODEL_NAME \
      --ds_name $DS_NAME \
      --ds_dir $DS_DIR \
-     --output_dir_name output_mc_${OUTPUT_NAME} \
+     --output_dir_name output_no_visual_mc_${OUTPUT_NAME} \
      --start_at $START \
      --limit $LIMIT \
      --split $SPLIT \
      --multichoice \
      --visual_disabled
   fi
+
 else
+
   if [ "$VISUAL_DISABLED" = false ] ; then
     python -m benchmark.start \
      --model_name $MODEL_NAME \
@@ -117,7 +119,7 @@ else
     --model_name $MODEL_NAME \
     --ds_name $DS_NAME \
     --ds_dir $DS_DIR \
-    --output_dir_name output_${OUTPUT_NAME} \
+    --output_dir_name output_no_visual_${OUTPUT_NAME} \
     --start_at $START \
     --limit $LIMIT \
     --split $SPLIT \
