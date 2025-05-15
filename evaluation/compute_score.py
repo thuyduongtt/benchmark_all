@@ -163,29 +163,50 @@ def compute_score(list_of_csv, output_dir, limit=0, extract_answer_fn=None):
 
 
 if __name__ == '__main__':
-    result_dirs = {
+    RESULTS = {
         'ReasonVQA': [
-            'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced',
-            'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced',
-            'output_gpt__ReasonVQA_unbalanced',
-            'output_idefics2__ReasonVQA_unbalanced',
-            'output_llava_ov__ReasonVQA_unbalanced',
-            'output_mantis_idefics2__ReasonVQA_unbalanced',
-            'output_mantis_siglip__ReasonVQA_unbalanced',
-            'output_mPLUGOwl2__ReasonVQA_unbalanced',
-            'output_mPLUGOwl3__ReasonVQA_unbalanced',
-            'output_paligemma2__ReasonVQA_unbalanced',
-            'output_qwen25__ReasonVQA_unbalanced',
-            'output_qwen2finetuned__ReasonVQA_unbalanced',
-            'output_qwen2__ReasonVQA_unbalanced',
-            'output_smolvlm__ReasonVQA_unbalanced',
+            # 'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced',
+            # 'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced',
+            # 'output_gpt__ReasonVQA_unbalanced',
+            # 'output_idefics2__ReasonVQA_unbalanced',
+            # 'output_llava_ov__ReasonVQA_unbalanced',
+            # 'output_mantis_idefics2__ReasonVQA_unbalanced',
+            # 'output_mantis_siglip__ReasonVQA_unbalanced',
+            # 'output_mPLUGOwl2__ReasonVQA_unbalanced',
+            # 'output_mPLUGOwl3__ReasonVQA_unbalanced',
+            # 'output_paligemma2mix3b_ft__ReasonVQA_unbalanced',
+            # 'output_paligemma2mix3b__ReasonVQA_unbalanced',
+            # 'output_paligemma2mix_ft__ReasonVQA_unbalanced',
+            # 'output_paligemma2mix__ReasonVQA_unbalanced',
+            # 'output_paligemma2__ReasonVQA_unbalanced',
+            # 'output_qwen25__ReasonVQA_unbalanced',
+            # 'output_qwen2finetuned__ReasonVQA_unbalanced',
+            # 'output_qwen2__ReasonVQA_unbalanced',
+            # 'output_smolvlm__ReasonVQA_unbalanced',
+        ],
+        'OKVQA': [
+            # 'output_gpt__OKVQA',
+            # 'output_llava_ov__OKVQA',
+            # 'output_paligemma2mix__OKVQA',
+            # 'output_paligemma2__OKVQA',
+            # 'output_qwen25__OKVQA',
+            # 'output_qwen2finetuned__OKVQA',
+            # 'output_qwen2__OKVQA',
+            # 'output_smolvlm__OKVQA',
+        ],
+        'VQAv2': [
+            'output_llava_ov__VQAv2',
+            'output_paligemma2mix__VQAv2',
+            'output_paligemma2__VQAv2',
+            'output_qwen25__VQAv2',
+            'output_smolvlm__VQAv2',
         ]
     }
 
     overwrite = False
 
-    for ds in result_dirs:
-        for res_dir in result_dirs[ds]:
+    for ds in RESULTS:
+        for res_dir in RESULTS[ds]:
             result_dir = f'../results/{ds}/{res_dir}'
             if Path(f'{result_dir}/score').exists() and not overwrite:
                 print(result_dir, 'already has score. Skipped :)')
