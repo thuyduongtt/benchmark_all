@@ -15,7 +15,8 @@ class GPT(BenchmarkModel):
             api_version="2023-07-01-preview"
         )
 
-    def run_vqa_task(self, image, row_data, choices=None, image_url=None):
+    # set image=None to run the task with question only
+    def run_vqa_task(self, row_data, image=None, choices=None, image_url=None):
         if self.client is None:
             self.load_model()
 
@@ -28,28 +29,33 @@ class GPT(BenchmarkModel):
         if image_url is not None:
             img_url = image_url
             # print('Load image from URL:', img_url)
-        else:
+        elif image is not None:
             with open(image, "rb") as image_file:
                 encoded_string = base64.b64encode(image_file.read())
                 img_url = f"data:image/jpeg;base64,{encoded_string}"
                 print('Load image from local and convert to base64')
+        else:
+            img_url = None
+
+        if img_url is None:
+            content = question
+        else:
+            content = [
+                {"type": "text", "text": question},
+                {
+                    "type": "image_url",
+                    "image_url": {"url": img_url}
+                },
+            ]
 
         try:
             completion = self.client.chat.completions.create(
                 model="gpt-4o",
                 messages=[
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text", "text": question},
-                            {
-                                "type": "image_url",
-                                "image_url": {"url": img_url}
-                            },
-                        ]
-                    },
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": content},
                 ],
-            )    
+            )
             outputs = completion.choices[0].message.content
 
         except BadRequestError as e:
@@ -61,4 +67,3 @@ class GPT(BenchmarkModel):
             return f'{outputs} | {[c["symbol"] + ". " + c["choice"] for c in list_of_choices]}'
 
         return outputs
-

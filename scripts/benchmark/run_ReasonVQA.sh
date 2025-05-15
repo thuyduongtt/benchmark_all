@@ -74,27 +74,53 @@ DS_VERSION="unbalanced"
 
 DS_DIR="../dataset/${DS_VERSION}"
 MODEL_TYPE=""
+VISUAL_DISABLED=false
 
 
 OUTPUT_NAME=${MODEL_NAME}_${MODEL_TYPE}_${DS_NAME}_${DS_VERSION}_${SPLIT}_${START}
 
 if [ "$MULTICHOICE" = true ] ; then
-  python -m benchmark.start \
-   --model_name $MODEL_NAME \
-   --ds_name $DS_NAME \
-   --ds_dir $DS_DIR \
-   --output_dir_name output_mc_${OUTPUT_NAME} \
-   --start_at $START \
-   --limit $LIMIT \
-   --split $SPLIT \
-   --multichoice
+  if [ "$VISUAL_DISABLED" = false ] ; then
+   python -m benchmark.start \
+    --model_name $MODEL_NAME \
+    --ds_name $DS_NAME \
+    --ds_dir $DS_DIR \
+    --output_dir_name output_mc_${OUTPUT_NAME} \
+    --start_at $START \
+    --limit $LIMIT \
+    --split $SPLIT \
+    --multichoice
+  else
+   python -m benchmark.start \
+     --model_name $MODEL_NAME \
+     --ds_name $DS_NAME \
+     --ds_dir $DS_DIR \
+     --output_dir_name output_mc_${OUTPUT_NAME} \
+     --start_at $START \
+     --limit $LIMIT \
+     --split $SPLIT \
+     --multichoice \
+     --visual_disabled
+  fi
 else
-  python -m benchmark.start \
-   --model_name $MODEL_NAME \
-   --ds_name $DS_NAME \
-   --ds_dir $DS_DIR \
-   --output_dir_name output_${OUTPUT_NAME} \
-   --start_at $START \
-   --limit $LIMIT \
-   --split $SPLIT
+  if [ "$VISUAL_DISABLED" = false ] ; then
+    python -m benchmark.start \
+     --model_name $MODEL_NAME \
+     --ds_name $DS_NAME \
+     --ds_dir $DS_DIR \
+     --output_dir_name output_${OUTPUT_NAME} \
+     --start_at $START \
+     --limit $LIMIT \
+     --split $SPLIT
+  else
+   python -m benchmark.start \
+    --model_name $MODEL_NAME \
+    --ds_name $DS_NAME \
+    --ds_dir $DS_DIR \
+    --output_dir_name output_${OUTPUT_NAME} \
+    --start_at $START \
+    --limit $LIMIT \
+    --split $SPLIT \
+    --visual_disabled
+  fi
 fi

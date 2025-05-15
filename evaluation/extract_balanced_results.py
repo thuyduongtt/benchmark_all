@@ -92,7 +92,7 @@ def run_pipeline_by_question(task, path_to_dataset, output_dir_name, limit=0, st
             csv_file.close()
             csv_file, csv_writer = init_csv_file()
 
-        row_data = task(d['image_id'], d['question'])
+        row_data = task(d['question'], d['image_id'])
 
         if row_data is None:
             n_error += 1

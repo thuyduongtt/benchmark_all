@@ -26,7 +26,7 @@ class MPLUGOWL3(BenchmarkModel):
         self.processor = model.init_processor(self.tokenizer)
         self.model = model
 
-    def run_vqa_task(self, image, row_data, choices=None, image_url=None):
+    def run_vqa_task(self, row_data, image=None, choices=None, image_url=None):
         # return f'prediction, {image}, {row_data["question"]}'  # turn off model for pipeline testing
 
         if self.processor is None:

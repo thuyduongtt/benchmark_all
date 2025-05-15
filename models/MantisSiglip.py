@@ -21,7 +21,7 @@ class MantisSiglip(BenchmarkModel):
                                                             torch_dtype=torch.bfloat16,
                                                             attn_implementation=attn_implementation)
 
-    def run_vqa_task(self, image, row_data, choices=None, image_url=None):
+    def run_vqa_task(self, row_data, image=None, choices=None, image_url=None):
         if self.model is None:
             self.load_model()
 

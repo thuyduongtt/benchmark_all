@@ -5,6 +5,7 @@ from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration
 
 from models.BenchmarkModel import BenchmarkModel
 
+
 # device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
@@ -26,7 +27,7 @@ class PaliGemma2Base(BenchmarkModel):
         self.model = model
         self.processor = image_processor
 
-    def run_vqa_task(self, image, row_data, choices=None, image_url=None):
+    def run_vqa_task(self, row_data, image=None, choices=None, image_url=None):
         if self.model is None:
             self.load_model()
 
@@ -72,6 +73,7 @@ class PaliGemma2Mix3B(PaliGemma2Base):
 class PaliGemma2Mix_Finetuned(PaliGemma2Base):
     def __init__(self):
         super().__init__('paligemma2_reasonvqa/checkpoint-11000')
+
 
 class PaliGemma2Mix3B_Finetuned(PaliGemma2Base):
     def __init__(self):

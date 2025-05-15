@@ -3,6 +3,8 @@ import json
 from benchmark.pipeline import run_pipeline_by_question
 
 MODE = 'pipeline'
+
+
 # MODE = 'inference'
 
 
@@ -85,9 +87,7 @@ def inference(task, dataset_path, output_name):
             'answers': []
         }
         for question in sample['questions']:
-            answer = task(sample['image'], {
-                'question': question
-            })
+            answer = task({'question': question}, sample['image'])
             output_obj['answers'].append(answer)
         outputs.append(output_obj)
 
@@ -110,6 +110,7 @@ if __name__ == '__main__':
         parser.add_argument('--multichoice', action='store_true')
         parser.add_argument('--model_name', type=str, default='mPLUGOwl2')
         parser.add_argument('--model_type', type=str, default=None)
+        parser.add_argument('--visual_disabled', action='store_true')
 
     # for inference concrete examples
     else:
@@ -130,7 +131,7 @@ if __name__ == '__main__':
 
     if MODE == 'pipeline':
         run_pipeline_by_question(model.run_vqa_task, args.ds_name, args.ds_dir, args.img_dir, args.output_dir_name,
-                                 limit=args.limit,
-                                 start_at=args.start_at, split=args.split, multichoice=args.multichoice)
+                                 limit=args.limit, start_at=args.start_at, split=args.split,
+                                 multichoice=args.multichoice, visual_disabled=args.visual_disabled)
     else:
         inference(model.run_vqa_task, args.ds_path, args.output_name)

@@ -12,7 +12,7 @@ CSV_HEADER = {
 
 
 def run_pipeline_by_question(task, ds_name, ds_dir, img_dir, output_dir_name, limit=0, start_at=0, split='train',
-                             multichoice=False):
+                             multichoice=False, visual_disabled=False):
     def init_csv_file():
         if not Path(output_dir_name).exists():
             Path(output_dir_name).mkdir(parents=True)
@@ -46,9 +46,15 @@ def run_pipeline_by_question(task, ds_name, ds_dir, img_dir, output_dir_name, li
 
         if multichoice:
             shuffled_choices, _ = shuffle(d['choices'], d['choice_scores'])
-            prediction = task(img_path, d, shuffled_choices, image_url=d['image_url'])
+            if not visual_disabled:
+                prediction = task(d, img_path, shuffled_choices, image_url=d['image_url'])
+            else:
+                prediction = task(d, None, shuffled_choices, image_url=d['image_url'])
         else:
-            prediction = task(img_path, d, image_url=d['image_url'])
+            if not visual_disabled:
+                prediction = task(d, img_path, image_url=d['image_url'])
+            else:
+                prediction = task(d, None, image_url=d['image_url'])
 
         # prediction = 'prediction'  # turn off model for pipeline testing
 

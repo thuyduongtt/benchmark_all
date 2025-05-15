@@ -26,7 +26,7 @@ class MPLUGOWL2(BenchmarkModel):
         self.mplugowl_model = load_pretrained_model(self.MODEL_PATH, None, model_name, load_8bit=False, load_4bit=False,
                                                     device=device)
 
-    def run_vqa_task(self, image, row_data, choices=None, image_url=None):
+    def run_vqa_task(self, row_data, image=None, choices=None, image_url=None):
         # return f'prediction, {image}, {row_data["question"]}'  # turn off model for pipeline testing
 
         if self.mplugowl_model is None:
