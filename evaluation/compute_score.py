@@ -183,6 +183,7 @@ if __name__ == '__main__':
             # 'output_qwen2finetuned__ReasonVQA_unbalanced',
             # 'output_qwen2__ReasonVQA_unbalanced',
             # 'output_smolvlm__ReasonVQA_unbalanced',
+            'output_no_visual_gpt'
         ],
         'OKVQA': [
             # 'output_gpt__OKVQA',
@@ -195,11 +196,11 @@ if __name__ == '__main__':
             # 'output_smolvlm__OKVQA',
         ],
         'VQAv2': [
-            'output_llava_ov__VQAv2',
-            'output_paligemma2mix__VQAv2',
-            'output_paligemma2__VQAv2',
-            'output_qwen25__VQAv2',
-            'output_smolvlm__VQAv2',
+            # 'output_llava_ov__VQAv2',
+            # 'output_paligemma2mix__VQAv2',
+            # 'output_paligemma2__VQAv2',
+            # 'output_qwen25__VQAv2',
+            # 'output_smolvlm__VQAv2',
         ]
     }
 

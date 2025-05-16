@@ -2,11 +2,6 @@ import argparse
 import json
 from benchmark.pipeline import run_pipeline_by_question
 
-MODE = 'pipeline'
-
-
-# MODE = 'inference'
-
 
 def select_model(model_name, model_type=None):
     if model_name == 'mPLUGOwl2':
@@ -97,8 +92,12 @@ def inference(task, dataset_path, output_name):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
+    # MODE = 'benchmark'
+    MODE = 'visual_reasoning'
+    # MODE = 'inference'
+
     # for benchmarking the entire dataset
-    if MODE == 'pipeline':
+    if MODE == 'benchmark':
         parser.add_argument('--ds_name', type=str, default='ReasonVQA',
                             help='Valid input: ReasonVQA, VQAv2, OKVQA, GQA')
         parser.add_argument('--ds_dir', type=str, required=True, help='Path to dataset')
@@ -129,9 +128,9 @@ if __name__ == '__main__':
     model = select_model(args.model_name, args.model_type)
     assert model is not None, 'Invalid model name'
 
-    if MODE == 'pipeline':
-        run_pipeline_by_question(model.run_vqa_task, args.ds_name, args.ds_dir, args.img_dir, args.output_dir_name,
-                                 limit=args.limit, start_at=args.start_at, split=args.split,
-                                 multichoice=args.multichoice, visual_disabled=args.visual_disabled)
+    if MODE == 'benchmark':
+        run_pipeline_by_question(model.run_vqa_task, args)
+    elif MODE == 'visual_reasoning':
+        run_pipeline_by_question(model.run_vqa_visual_reasoning, args)
     else:
         inference(model.run_vqa_task, args.ds_path, args.output_name)

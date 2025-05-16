@@ -23,6 +23,7 @@ def compute_aggregate(agg, scores):
     elif agg == 'sem':
         std = np.std(scores, ddof=1) * 100
         return std / np.sqrt(n)
+    return None
 
 
 def anaylysis_score_reasonvqa(questions_df, limit=0, multichoice=False, output_file=None, extract_answer_fn=None,
@@ -91,6 +92,8 @@ def anaylysis_score_reasonvqa(questions_df, limit=0, multichoice=False, output_f
                 predicted_symbol = row['prediction'][:p].strip()
                 if predicted_symbol.startswith('['):
                     predicted_symbol = ast.literal_eval(predicted_symbol)[0]
+                if predicted_symbol.endswith('.'):
+                    predicted_symbol = predicted_symbol[:-1]
                 choices_text = row['prediction'][p + 1:].strip()
                 choices = ast.literal_eval(choices_text)
                 prediction = None
@@ -104,7 +107,7 @@ def anaylysis_score_reasonvqa(questions_df, limit=0, multichoice=False, output_f
                             prediction = c[c.index('.') + 1:].strip()
                             break
                 if prediction is None:
-                    # print(row['prediction'], answer)
+                    # print(row['prediction'], '***', answer, '***', predicted_symbol)
                     s = 0
                     n_error += 1
                 else:
@@ -440,7 +443,7 @@ def evaluate(result_root, result_dirs, ds_root, agg='avg', size_analysis=False, 
                 get_all_csv(first_dir, first_csv_files)
                 avg_diff = compute_time(first_csv_files)
                 print('=' * 20, file=f)
-                print('Avg. processing time', format_seconds(avg_diff), file=f)
+                print('Avg. processing time (per 1000)', format_seconds(avg_diff), file=f)
 
             for m in eval_result:
                 metric = 'multichoice' if d['mc'] else m
@@ -466,27 +469,29 @@ def evaluate(result_root, result_dirs, ds_root, agg='avg', size_analysis=False, 
 
 if __name__ == '__main__':
     DS_ROOT = {
-        'ReasonVQA': '/mnt/e/Code/Masters/ds/ReasonVQA_subset/unbalanced',
-        'OKVQA': '/mnt/e/Code/Datasets/OKVQA',
-        'VQAv2': '/mnt/e/Code/Datasets/VQAv2',
+        'ReasonVQA': '/mnt/WORK/Code/Masters/ds/ReasonVQA_subset/unbalanced',
+        'OKVQA': '/mnt/WORK/Code/Datasets/OKVQA',
+        'VQAv2': '/mnt/WORK/Code/Datasets/VQAv2',
     }
+    RESULT_ROOT = '/mnt/WORK/Code/Masters/benchmark_all/results/'
 
     RESULTS = {
         'ReasonVQA': {
             'open': [
-                {'name': 'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced'},
-                {'name': 'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced'},
-                {'name': 'output_mPLUGOwl2__ReasonVQA_unbalanced'},
-                {'name': 'output_idefics2__ReasonVQA_unbalanced'},
-                {'name': 'output_mantis_siglip__ReasonVQA_unbalanced'},
-                {'name': 'output_mantis_idefics2__ReasonVQA_unbalanced'},
-                {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced'},
-                {'name': 'output_llava_ov__ReasonVQA_unbalanced'},  # <====== NEW
-                {'name': 'output_qwen25__ReasonVQA_unbalanced'},  # <====== NEW
-                {'name': 'output_gpt__ReasonVQA_unbalanced'},  # <====== NEW
-                {'name': 'output_paligemma2__ReasonVQA_unbalanced'},  # <====== NEW
-                {'name': 'output_paligemma2mix__ReasonVQA_unbalanced'},  # <====== NEW - has problem with dataset size analysis
-                {'name': 'output_smolvlm__ReasonVQA_unbalanced'},  # <====== NEW - test set only
+                # {'name': 'output_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced'},
+                # {'name': 'output_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced'},
+                # {'name': 'output_mPLUGOwl2__ReasonVQA_unbalanced'},
+                # {'name': 'output_idefics2__ReasonVQA_unbalanced'},
+                # {'name': 'output_mantis_siglip__ReasonVQA_unbalanced'},
+                # {'name': 'output_mantis_idefics2__ReasonVQA_unbalanced'},
+                # {'name': 'output_mPLUGOwl3__ReasonVQA_unbalanced'},
+                # {'name': 'output_llava_ov__ReasonVQA_unbalanced'},  # <====== NEW
+                # {'name': 'output_qwen25__ReasonVQA_unbalanced'},  # <====== NEW
+                # {'name': 'output_gpt__ReasonVQA_unbalanced'},  # <====== NEW
+                # {'name': 'output_paligemma2__ReasonVQA_unbalanced'},  # <====== NEW
+                # {'name': 'output_paligemma2mix__ReasonVQA_unbalanced'},  # <====== NEW - has problem with dataset size analysis
+                # {'name': 'output_smolvlm__ReasonVQA_unbalanced'},  # <====== NEW - test set only
+                # {'name': 'output_no_visual_gpt'},  # <====== NEW - test set only
 
                 # fine-tune
                 # {'name': 'output_qwen2__ReasonVQA_unbalanced'},  # <====== NEW
@@ -496,17 +501,18 @@ if __name__ == '__main__':
                 # {'name': 'output_paligemma2mix_ft__ReasonVQA_unbalanced'},  # <====== NEW
             ],
             'mc': [
-                {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced'},
-                {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced'},
-                {'name': 'output_mc_mPLUGOwl2__ReasonVQA_unbalanced'},
-                {'name': 'output_mc_idefics2__ReasonVQA_unbalanced', 'extract_fn': extract_answer_idefics2},
-                {'name': 'output_mc_mantis_siglip__ReasonVQA_unbalanced'},
-                {'name': 'output_mc_mantis_idefics2__ReasonVQA_unbalanced'},
-                {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced'},
-                {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced'},  # <====== NEW
-                {'name': 'output_mc_paligemma2__ReasonVQA_unbalanced'},  # <====== NEW
-                {'name': 'output_mc_paligemma2mix__ReasonVQA_unbalanced'},  # <====== NEW
-                {'name': 'output_mc_smolvlm__ReasonVQA_unbalanced'},  # <====== NEW
+                # {'name': 'output_mc_blip2_t5_pretrain_flant5xl_ReasonVQA_unbalanced'},
+                # {'name': 'output_mc_blip2_t5_instruct_flant5xxl_ReasonVQA_unbalanced'},
+                # {'name': 'output_mc_mPLUGOwl2__ReasonVQA_unbalanced'},
+                # {'name': 'output_mc_idefics2__ReasonVQA_unbalanced', 'extract_fn': extract_answer_idefics2},
+                # {'name': 'output_mc_mantis_siglip__ReasonVQA_unbalanced'},
+                # {'name': 'output_mc_mantis_idefics2__ReasonVQA_unbalanced'},
+                # {'name': 'output_mc_mPLUGOwl3__ReasonVQA_unbalanced'},
+                # {'name': 'output_mc_llava_ov__ReasonVQA_unbalanced'},  # <====== NEW
+                # {'name': 'output_mc_paligemma2__ReasonVQA_unbalanced'},  # <====== NEW
+                # {'name': 'output_mc_paligemma2mix__ReasonVQA_unbalanced'},  # <====== NEW
+                # {'name': 'output_mc_smolvlm__ReasonVQA_unbalanced'},  # <====== NEW
+                {'name': 'output_mc_gpt'},  # <====== NEW
 
                 # {'name': 'output_mc_paligemma2mix3b__ReasonVQA_unbalanced'},  # <====== NEW
             ]
@@ -527,6 +533,7 @@ if __name__ == '__main__':
                 # {'name': 'output_mc_mantis_idefics2__OKVQA'},
                 # {'name': 'output_mc_mantis_siglip__OKVQA'},
                 # {'name': 'output_mc_mPLUGOwl3__OKVQA'},
+                {'name': 'output_mc_gpt__OKVQA'},
             ]
         },
         'VQAv2': {
@@ -546,7 +553,7 @@ if __name__ == '__main__':
     }
 
     for ds_name in RESULTS:
-        res_root = '/mnt/e/Code/Masters/benchmark_all/results/' + ds_name
+        res_root = RESULT_ROOT + ds_name
         res_dirs = []
         for r in RESULTS[ds_name]['open']:
             res_dirs.append({
@@ -565,6 +572,6 @@ if __name__ == '__main__':
             continue
 
         for a in ['avg']:
-        # for a in ['avg', 'std', 'sem']:
+            # for a in ['avg', 'std', 'sem']:
             print('*' * 20, a, '*' * 20)
             evaluate(res_root, res_dirs, DS_ROOT[ds_name], agg=a)

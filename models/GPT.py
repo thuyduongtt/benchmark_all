@@ -67,3 +67,46 @@ class GPT(BenchmarkModel):
             return f'{outputs} | {[c["symbol"] + ". " + c["choice"] for c in list_of_choices]}'
 
         return outputs
+
+    # verify visual reasoning ability by asking model to identify object Wikidata ID
+    def run_vqa_visual_reasoning(self, row_data, image=None, image_url=None):
+        if self.client is None:
+            self.load_model()
+
+        question = f'Given this question: {row_data["question"]} Do not answer the question but find the Wikidata entity of the object in the question. Output the Wikidata ID only.'
+
+        if image_url is not None:
+            img_url = image_url
+            # print('Load image from URL:', img_url)
+        elif image is not None:
+            with open(image, "rb") as image_file:
+                encoded_string = base64.b64encode(image_file.read())
+                img_url = f"data:image/jpeg;base64,{encoded_string}"
+                print('Load image from local and convert to base64')
+        else:
+            return 'No image'
+
+        content = [
+            {"type": "text", "text": question},
+            {
+                "type": "image_url",
+                "image_url": {"url": img_url}
+            },
+        ]
+
+        try:
+            completion = self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": content},
+                ],
+            )
+            outputs = completion.choices[0].message.content
+
+        except BadRequestError as e:
+            print('Error happened:', row_data['question_id'], question)
+            print(e)
+            outputs = 'None'
+
+        return outputs

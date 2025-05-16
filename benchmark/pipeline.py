@@ -7,28 +7,36 @@ import random
 
 DATASETS = ['ReasonVQA', 'VQAv2', 'OKVQA', 'GQA']
 CSV_HEADER = {
-    'ReasonVQA': ['question_id', 'image_id', 'image', 'question', 'answer', 'prediction', 'n_hop', 'has_scene_graph', 'split']
+    'ReasonVQA': ['question_id', 'image_id', 'image', 'question', 'answer', 'prediction', 'n_hop', 'has_scene_graph',
+                  'split']
 }
 
+'''
+ds_name, ds_dir, img_dir, output_dir_name, limit=0, start_at=0, split='train', multichoice=False, visual_disabled=False
 
-def run_pipeline_by_question(task, ds_name, ds_dir, img_dir, output_dir_name, limit=0, start_at=0, split='train',
-                             multichoice=False, visual_disabled=False):
+args.ds_name, args.ds_dir, args.img_dir, args.output_dir_name,
+limit=args.limit, start_at=args.start_at, split=args.split,
+multichoice=args.multichoice, visual_disabled=args.visual_disabled
+'''
+
+
+def run_pipeline_by_question(task, args):
     def init_csv_file():
-        if not Path(output_dir_name).exists():
-            Path(output_dir_name).mkdir(parents=True)
+        if not Path(args.output_dir_name).exists():
+            Path(args.output_dir_name).mkdir(parents=True)
 
         timestamp = datetime.now().isoformat().replace(':', '-')
-        csvfile = open(f'{output_dir_name}/result_{timestamp}.csv', 'w', encoding='utf-8')
+        csvfile = open(f'{args.output_dir_name}/result_{timestamp}.csv', 'w', encoding='utf-8')
         csvwriter = csv.writer(csvfile)
-        if ds_name in CSV_HEADER:
-            csvwriter.writerow(CSV_HEADER[ds_name])
+        if args.ds_name in CSV_HEADER:
+            csvwriter.writerow(CSV_HEADER[args.ds_name])
         else:
             csvwriter.writerow(['question_id', 'image_id', 'image', 'question', 'answer', 'prediction'])
         return csvfile, csvwriter
 
     csv_file, csv_writer = init_csv_file()
 
-    json_data = stream_data(ds_name, ds_dir, split, limit=limit, start_at=start_at)
+    json_data = stream_data(args.ds_name, args.ds_dir, args.split, limit=args.limit, start_at=args.start_at)
 
     i = 0
     for d in json_data:
@@ -42,19 +50,19 @@ def run_pipeline_by_question(task, ds_name, ds_dir, img_dir, output_dir_name, li
             csv_file.close()
             csv_file, csv_writer = init_csv_file()
 
-        img_path = f"{img_dir}/" + d['image_path']
+        img_path = f"{args.img_dir}/" + d['image_path']
 
-        if multichoice:
+        if args.multichoice:
             shuffled_choices, _ = shuffle(d['choices'], d['choice_scores'])
-            if not visual_disabled:
-                prediction = task(d, image=img_path, choices=shuffled_choices, image_url=d['image_url'])
-            else:
+            if args.visual_disabled:
                 prediction = task(d, image=None, choices=shuffled_choices, image_url=None)
-        else:
-            if not visual_disabled:
-                prediction = task(d, image=img_path, image_url=d['image_url'])
             else:
+                prediction = task(d, image=img_path, choices=shuffled_choices, image_url=d['image_url'])
+        else:
+            if args.visual_disabled:
                 prediction = task(d, image=None, image_url=None)
+            else:
+                prediction = task(d, image=img_path, image_url=d['image_url'])
 
         # prediction = 'prediction'  # turn off model for pipeline testing
 
@@ -64,9 +72,9 @@ def run_pipeline_by_question(task, ds_name, ds_dir, img_dir, output_dir_name, li
         if i <= 5:
             print(d['question_id'], d['question'], answers, prediction)
 
-        if ds_name == 'ReasonVQA':
+        if args.ds_name == 'ReasonVQA':
             csv_writer.writerow([d['question_id'], d['image_id'], img_path, d['question'], answers,
-                                 prediction, d['n_hop'], d['has_scene_graph'], split])
+                                 prediction, d['n_hop'], d['has_scene_graph'], args.split])
         else:
             csv_writer.writerow([d['question_id'], d['image_id'], img_path, d['question'], answers, prediction])
 
