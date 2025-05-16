@@ -11,14 +11,6 @@ CSV_HEADER = {
                   'split']
 }
 
-'''
-ds_name, ds_dir, img_dir, output_dir_name, limit=0, start_at=0, split='train', multichoice=False, visual_disabled=False
-
-args.ds_name, args.ds_dir, args.img_dir, args.output_dir_name,
-limit=args.limit, start_at=args.start_at, split=args.split,
-multichoice=args.multichoice, visual_disabled=args.visual_disabled
-'''
-
 
 def run_pipeline_by_question(task, args):
     def init_csv_file():
@@ -54,15 +46,9 @@ def run_pipeline_by_question(task, args):
 
         if args.multichoice:
             shuffled_choices, _ = shuffle(d['choices'], d['choice_scores'])
-            if args.visual_disabled:
-                prediction = task(d, image=None, choices=shuffled_choices, image_url=None)
-            else:
-                prediction = task(d, image=img_path, choices=shuffled_choices, image_url=d['image_url'])
+            prediction = task(d, image=img_path, choices=shuffled_choices, image_url=d['image_url'])
         else:
-            if args.visual_disabled:
-                prediction = task(d, image=None, image_url=None)
-            else:
-                prediction = task(d, image=img_path, image_url=d['image_url'])
+            prediction = task(d, image=img_path, image_url=d['image_url'])
 
         # prediction = 'prediction'  # turn off model for pipeline testing
 

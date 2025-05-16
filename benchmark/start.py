@@ -92,8 +92,7 @@ def inference(task, dataset_path, output_name):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    # MODE = 'benchmark'
-    MODE = 'visual_reasoning'
+    MODE = 'benchmark'
     # MODE = 'inference'
 
     # for benchmarking the entire dataset
@@ -109,7 +108,7 @@ if __name__ == '__main__':
         parser.add_argument('--multichoice', action='store_true')
         parser.add_argument('--model_name', type=str, default='mPLUGOwl2')
         parser.add_argument('--model_type', type=str, default=None)
-        parser.add_argument('--visual_disabled', action='store_true')
+        parser.add_argument('--visual_reasoning', action='store_true')
 
     # for inference concrete examples
     else:
@@ -129,8 +128,9 @@ if __name__ == '__main__':
     assert model is not None, 'Invalid model name'
 
     if MODE == 'benchmark':
-        run_pipeline_by_question(model.run_vqa_task, args)
-    elif MODE == 'visual_reasoning':
-        run_pipeline_by_question(model.run_vqa_visual_reasoning, args)
+        if args.visual_reasoning:
+            run_pipeline_by_question(model.run_vqa_visual_reasoning, args)
+        else:
+            run_pipeline_by_question(model.run_vqa_task, args)
     else:
         inference(model.run_vqa_task, args.ds_path, args.output_name)
